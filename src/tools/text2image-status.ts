@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { updateTaskWithImages } from '@/utils/downloadImage';
 
 interface TaskResult {
     orig_prompt: string;
@@ -66,22 +65,12 @@ export const makeText2ImageStatusHandler = (apiKey: string) => {
             }
 
             const data: TaskStatusResponse = await response.json();
-            console.log('data', data);
 
-            // 如果任务成功，自动下载图片并更新任务数据
-            if (data.output?.task_status === 'SUCCEEDED') {
-                try {
-                    await updateTaskWithImages(task_id, data);
-                } catch (error) {
-                    console.error('自动下载图片失败:', error);
-                    // 不抛出错误，避免影响主要功能
-                }
-            }
-
+            // 返回供应商的原始数据
             return {
                 content: [{
                     type: "text" as const,
-                    text: `任务状态: ${data.output?.task_status || 'UNKNOWN'}\n任务ID: ${task_id}\n提交时间: ${data.output?.submit_time || 'N/A'}\n结束时间: ${data.output?.end_time || 'N/A'}`
+                    text: JSON.stringify(data, null, 2)
                 }],
             };
 
