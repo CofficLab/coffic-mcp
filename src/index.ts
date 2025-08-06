@@ -10,7 +10,7 @@ export class MyMCP extends McpAgent {
 
 	async init() {
 		// 获取API密钥
-		const apiKey = '';
+		const apiKey = (this.env as any).DASHSCOPE_API_KEY as string;
 
 		// 计算器工具
 		this.server.tool(addTool.name, addTool.schema, addTool.handler);

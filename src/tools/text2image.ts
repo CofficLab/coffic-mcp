@@ -60,7 +60,7 @@ export const makeText2ImageHandler = (apiKey: string) => {
                 }
             };
 
-            console.log('准备调用DashScope API，请求参数是', requestBody);
+            console.log('准备调用DashScope API，Key:', apiKey, '请求参数是', requestBody);
 
             // 调用DashScope API
             const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis', {
