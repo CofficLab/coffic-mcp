@@ -1,0 +1,20 @@
+{
+    "mcpServers": {
+        "cloudflare": {
+            "command": "npx",
+            "args": [
+                "mcp-remote",
+                "https://docs.mcp.cloudflare.com/sse"
+            ]
+        },
+        "Astro docs": {
+            "url": "https://mcp.docs.astro.build/mcp",
+            "headers": {}
+        },
+        "Coffic": {
+            "command": "npx mcp-remote https://mcp.coffic.cn/sse",
+            "env": {},
+            "args": []
+        }
+    }
+}
