@@ -92,6 +92,7 @@ export const text2imageStatusTool = {
     name: "text2image_status",
     schema: {
         task_id: z.string(),
+        dashScopeApiKey: z.string().optional(),
     },
     getHandler: makeText2ImageStatusHandler
 }; 
