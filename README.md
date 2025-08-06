@@ -1,55 +1,49 @@
-# Building a Remote MCP Server on Cloudflare (Without Auth)
+# Coffic MCP
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=Coffic&config=eyJjb21tYW5kIjoibnB4IG1jcC1yZW1vdGUgaHR0cHM6Ly9tY3AuY29mZmljLmNuL3NzZSJ9)
 
-[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=Coffic&config=JTdCJTIyY29tbWFuZCUyMiUzQSUyMm5weCUyMG1jcC1yZW1vdGUlMjBodHRwcyUzQSUyRiUyRm1jcC5jb2ZmaWMuY24lMkZzc2UlMjIlN0Q%3D)
+## 环境变量配置
 
-This example allows you to deploy a remote MCP server that doesn't require authentication on Cloudflare Workers.
+### 生产环境配置（推荐）
 
-## Get started:
-
-[![Deploy to Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/ai/tree/main/demos/remote-mcp-authless)
-
-This will deploy your MCP server to a URL like: `remote-mcp-server-authless.<your-account>.workers.dev/sse`
-
-Alternatively, you can use the command line below to get the remote MCP Server created on your local machine:
+对于生产环境部署，使用 Wrangler CLI 安全存储环境变量：
 
 ```bash
-npm create cloudflare@latest -- my-mcp-server --template=cloudflare/ai/demos/remote-mcp-authless
+# 设置环境变量（加密存储）
+wrangler secret put DASHSCOPE_API_KEY
+
+# 查看所有密钥
+wrangler secret list
+
+# 部署到Cloudflare Workers
+wrangler deploy
 ```
 
-## Customizing your MCP Server
+### 本地开发配置
 
-To add your own [tools](https://developers.cloudflare.com/agents/model-context-protocol/tools/) to the MCP server, define each tool inside the `init()` method of `src/index.ts` using `this.server.tool(...)`.
-
-## Connect to Cloudflare AI Playground
-
-You can connect to your MCP server from the Cloudflare AI Playground, which is a remote MCP client:
-
-1. Go to https://playground.ai.cloudflare.com/
-2. Enter your deployed MCP server URL (`remote-mcp-server-authless.<your-account>.workers.dev/sse`)
-3. You can now use your MCP tools directly from the playground!
-
-## Connect Claude Desktop to your MCP server
-
-You can also connect to your remote MCP server from local MCP clients, by using the [mcp-remote proxy](https://www.npmjs.com/package/mcp-remote).
-
-To connect to your MCP server from Claude Desktop, follow [Anthropic's Quickstart](https://modelcontextprotocol.io/quickstart/user) and within Claude Desktop go to Settings > Developer > Edit Config.
-
-Update with this configuration:
+对于本地开发，在`wrangler.jsonc`中添加变量：
 
 ```json
 {
-  "mcpServers": {
-    "calculator": {
-      "command": "npx",
-      "args": [
-        "mcp-remote",
-        "http://localhost:8787/sse" // or remote-mcp-server-authless.your-account.workers.dev/sse
-      ]
-    }
+  "vars": {
+    "DASHSCOPE_API_KEY": "your-api-key-here"
   }
 }
 ```
 
-Restart Claude and you should see the tools become available.
+### 代码中使用
+
+在 TypeScript 代码中访问环境变量：
+
+```typescript
+// 在工具处理函数中
+const apiKey = env.DASHSCOPE_API_KEY;
+
+// 在 fetch 处理函数中
+export default {
+  fetch(request: Request, env: Env, ctx: ExecutionContext) {
+    const apiKey = env.DASHSCOPE_API_KEY;
+    // ...
+  },
+};
+```

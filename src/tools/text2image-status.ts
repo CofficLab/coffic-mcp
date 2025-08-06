@@ -31,21 +31,16 @@ interface TaskStatusResponse {
     };
 }
 
-export const text2imageStatusTool = {
-    name: "text2image_status",
-    schema: {
-        task_id: z.string(),
-    },
-    handler: async ({ task_id }: { task_id: string }) => {
+export const makeText2ImageStatusHandler = (apiKey: string) => {
+    return async ({ task_id }: { task_id: string }) => {
         try {
-            // 获取API密钥
-            const apiKey = import.meta.env.DASHSCOPE_API_KEY;
+            // 检查API密钥
             if (!apiKey) {
-                console.error('缺少DASHSCOPE_API_KEY环境变量');
+                console.error('缺少DASHSCOPE_API_KEY');
                 return {
                     content: [{
                         type: "text" as const,
-                        text: "错误: API配置错误，缺少DASHSCOPE_API_KEY环境变量"
+                        text: "错误: API配置错误，缺少DASHSCOPE_API_KEY"
                     }],
                 };
             }
@@ -99,5 +94,13 @@ export const text2imageStatusTool = {
                 }],
             };
         }
+    };
+};
+
+export const text2imageStatusTool = {
+    name: "text2image_status",
+    schema: {
+        task_id: z.string(),
     },
+    getHandler: makeText2ImageStatusHandler
 }; 

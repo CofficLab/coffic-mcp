@@ -12,15 +12,8 @@ interface DashScopeResponse {
     request_id: string;
 }
 
-export const text2imageTool = {
-    name: "text2image",
-    schema: {
-        prompt: z.string(),
-        size: z.string().optional(),
-        n: z.number().optional(),
-        model: z.string().optional(),
-    },
-    handler: async ({ prompt, size, n, model }: {
+export const makeText2ImageHandler = (apiKey: string) => {
+    return async ({ prompt, size, n, model }: {
         prompt: string;
         size?: string;
         n?: number;
@@ -43,14 +36,13 @@ export const text2imageTool = {
                 };
             }
 
-            // 获取API密钥
-            const apiKey = import.meta.env.DASHSCOPE_API_KEY;
+            // 检查API密钥
             if (!apiKey) {
-                console.error('缺少DASHSCOPE_API_KEY环境变量');
+                console.error('缺少DASHSCOPE_API_KEY');
                 return {
                     content: [{
                         type: "text" as const,
-                        text: "错误: API配置错误，缺少DASHSCOPE_API_KEY环境变量"
+                        text: "错误: API配置错误，缺少DASHSCOPE_API_KEY"
                     }],
                 };
             }
@@ -110,7 +102,18 @@ export const text2imageTool = {
                 }],
             };
         }
+    };
+};
+
+export const text2imageTool = {
+    name: "text2image",
+    schema: {
+        prompt: z.string(),
+        size: z.string().optional(),
+        n: z.number().optional(),
+        model: z.string().optional(),
     },
+    getHandler: makeText2ImageHandler
 };
 
 /**

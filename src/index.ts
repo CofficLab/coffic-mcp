@@ -1,6 +1,6 @@
 import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { addTool, calculateTool, text2imageTool, text2imageStatusTool, text2imageTaskListTool, text2imageModelsTool } from "./tools";
+import { addTool, calculateTool, text2imageTool, text2imageStatusTool, text2imageTaskListTool, text2imageModelsTool, makeText2ImageHandler, makeText2ImageStatusHandler } from "./tools";
 
 export class MyMCP extends McpAgent {
 	server = new McpServer({
@@ -9,13 +9,16 @@ export class MyMCP extends McpAgent {
 	});
 
 	async init() {
+		// 获取API密钥
+		const apiKey = '';
+
 		// 计算器工具
 		this.server.tool(addTool.name, addTool.schema, addTool.handler);
 		this.server.tool(calculateTool.name, calculateTool.schema, calculateTool.handler);
 
-		// 文本转图像工具
-		this.server.tool(text2imageTool.name, text2imageTool.schema, text2imageTool.handler);
-		this.server.tool(text2imageStatusTool.name, text2imageStatusTool.schema, text2imageStatusTool.handler);
+		// 文本转图像工具 - 使用makeHandler模式
+		this.server.tool(text2imageTool.name, text2imageTool.schema, makeText2ImageHandler(apiKey));
+		this.server.tool(text2imageStatusTool.name, text2imageStatusTool.schema, makeText2ImageStatusHandler(apiKey));
 		this.server.tool(text2imageModelsTool.name, text2imageModelsTool.schema, text2imageModelsTool.handler);
 		this.server.tool(text2imageTaskListTool.name, text2imageTaskListTool.schema, text2imageTaskListTool.handler);
 	}
