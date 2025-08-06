@@ -4,16 +4,20 @@
 	"private": true,
 	"scripts": {
 		"deploy": "wrangler deploy",
-		"dev": "wrangler dev",
 		"format": "biome format --write",
 		"lint:fix": "biome lint --fix",
 		"start": "wrangler dev",
 		"cf-typegen": "wrangler types",
-		"type-check": "tsc --noEmit"
+		"type-check": "tsc --noEmit",
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro"
 	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "1.17.1",
 		"agents": "^0.0.109",
+		"astro": "^5.12.8",
 		"zod": "^3.25.67"
 	},
 	"devDependencies": {

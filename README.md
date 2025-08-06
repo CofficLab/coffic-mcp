@@ -2,6 +2,8 @@
 
 [![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=Coffic&config=eyJjb21tYW5kIjoibnB4IG1jcC1yZW1vdGUgaHR0cHM6Ly9tY3AuY29mZmljLmNuL3NzZSJ9)
 
+[![Install MCP Server](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/install-mcp?name=Coffic&config=JTdCJTIyY29tbWFuZCUyMiUzQSUyMm5weCUyMG1jcC1yZW1vdGUlMjBodHRwcyUzQSUyRiUyRm1jcC5jb2ZmaWMuY24lMkZzc2UlMjIlN0Q%3D)
+
 This example allows you to deploy a remote MCP server that doesn't require authentication on Cloudflare Workers.
 
 ## Get started:

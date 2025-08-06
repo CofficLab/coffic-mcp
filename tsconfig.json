@@ -1,7 +1,13 @@
 {
+	"extends": "astro/tsconfigs/strict",
+	"exclude": [
+		"dist"
+	],
 	"compilerOptions": {
 		"target": "es2021",
-		"lib": ["es2021"],
+		"lib": [
+			"es2021"
+		],
 		"jsx": "react-jsx",
 		"module": "es2022",
 		"moduleResolution": "bundler",
@@ -15,5 +21,10 @@
 		"strict": true,
 		"skipLibCheck": true
 	},
-	"include": ["worker-configuration.d.ts", "src/**/*.ts"]
+	"include": [
+		"worker-configuration.d.ts",
+		"src/**/*.ts",
+		".astro/types.d.ts",
+		"**/*"
+	]
 }
