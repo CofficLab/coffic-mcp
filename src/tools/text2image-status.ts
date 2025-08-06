@@ -31,10 +31,12 @@ interface TaskStatusResponse {
 }
 
 export const makeText2ImageStatusHandler = (apiKey: string) => {
-    return async ({ task_id }: { task_id: string }) => {
+    return async ({ task_id, dashScopeApiKey }: { task_id: string, dashScopeApiKey?: string }) => {
+        const key = dashScopeApiKey || apiKey;
+
         try {
             // 检查API密钥
-            if (!apiKey) {
+            if (!key) {
                 console.error('缺少DASHSCOPE_API_KEY');
                 return {
                     content: [{
@@ -48,7 +50,7 @@ export const makeText2ImageStatusHandler = (apiKey: string) => {
             const response = await fetch(`https://dashscope.aliyuncs.com/api/v1/tasks/${task_id}`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${apiKey}`,
+                    'Authorization': `Bearer ${key}`,
                     'Content-Type': 'application/json'
                 }
             });

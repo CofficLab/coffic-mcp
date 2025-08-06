@@ -2,7 +2,6 @@ import { z } from "zod";
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
-import { scanAllTaskDirectories } from '@/utils/downloadImage';
 
 interface DashScopeResponse {
     output: {
@@ -13,31 +12,18 @@ interface DashScopeResponse {
 }
 
 export const makeText2ImageHandler = (apiKey: string) => {
-    return async ({ prompt, size, n, model }: {
+    return async ({ prompt, size, n, model, dashScopeApiKey }: {
         prompt: string;
         size?: string;
         n?: number;
         model?: string;
+        dashScopeApiKey?: string;
     }) => {
+        const key = dashScopeApiKey || apiKey;
+
         try {
-            // 先检查是否有相同提示词的任务
-            const existingTasks = await scanAllTaskDirectories();
-            const matchingTask = existingTasks.find(task =>
-                task.prompt === prompt
-            );
-
-            if (matchingTask) {
-                console.log(`找到相同提示词的任务: ${matchingTask.taskId}`);
-                return {
-                    content: [{
-                        type: "text" as const,
-                        text: `找到相同提示词的任务: ${matchingTask.taskId}，直接返回结果`
-                    }],
-                };
-            }
-
             // 检查API密钥
-            if (!apiKey) {
+            if (!key) {
                 console.error('缺少DASHSCOPE_API_KEY');
                 return {
                     content: [{
@@ -60,14 +46,14 @@ export const makeText2ImageHandler = (apiKey: string) => {
                 }
             };
 
-            console.log('准备调用DashScope API，Key:', apiKey, '请求参数是', requestBody);
+            console.log('准备调用DashScope API，Key:', key, '请求参数是', requestBody);
 
             // 调用DashScope API
             const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis', {
                 method: 'POST',
                 headers: {
                     'X-DashScope-Async': 'enable',
-                    'Authorization': `Bearer ${apiKey}`,
+                    'Authorization': `Bearer ${key}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(requestBody)
@@ -112,6 +98,7 @@ export const text2imageTool = {
         size: z.string().optional(),
         n: z.number().optional(),
         model: z.string().optional(),
+        dashScopeApiKey: z.string().optional(),
     },
     getHandler: makeText2ImageHandler
 };
