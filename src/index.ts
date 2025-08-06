@@ -1,56 +1,23 @@
 import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod";
+import { addTool, calculateTool, text2imageTool, text2imageStatusTool, text2imageTaskListTool, text2imageModelsTool } from "./tools";
 
-// Define our MCP agent with tools
 export class MyMCP extends McpAgent {
 	server = new McpServer({
-		name: "Authless Calculator",
+		name: "Coffic MCP Server",
 		version: "1.0.0",
 	});
 
 	async init() {
-		// Simple addition tool
-		this.server.tool("add", { a: z.number(), b: z.number() }, async ({ a, b }) => ({
-			content: [{ type: "text", text: String(a + b) }],
-		}));
+		// 计算器工具
+		this.server.tool(addTool.name, addTool.schema, addTool.handler);
+		this.server.tool(calculateTool.name, calculateTool.schema, calculateTool.handler);
 
-		// Calculator tool with multiple operations
-		this.server.tool(
-			"calculate",
-			{
-				operation: z.enum(["add", "subtract", "multiply", "divide"]),
-				a: z.number(),
-				b: z.number(),
-			},
-			async ({ operation, a, b }) => {
-				let result: number;
-				switch (operation) {
-					case "add":
-						result = a + b;
-						break;
-					case "subtract":
-						result = a - b;
-						break;
-					case "multiply":
-						result = a * b;
-						break;
-					case "divide":
-						if (b === 0)
-							return {
-								content: [
-									{
-										type: "text",
-										text: "Error: Cannot divide by zero",
-									},
-								],
-							};
-						result = a / b;
-						break;
-				}
-				return { content: [{ type: "text", text: String(result) }] };
-			},
-		);
+		// 文本转图像工具
+		this.server.tool(text2imageTool.name, text2imageTool.schema, text2imageTool.handler);
+		this.server.tool(text2imageStatusTool.name, text2imageStatusTool.schema, text2imageStatusTool.handler);
+		this.server.tool(text2imageModelsTool.name, text2imageModelsTool.schema, text2imageModelsTool.handler);
+		this.server.tool(text2imageTaskListTool.name, text2imageTaskListTool.schema, text2imageTaskListTool.handler);
 	}
 }
 

@@ -4,6 +4,12 @@
 		"dist"
 	],
 	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [
+				"src/*"
+			],
+		},
 		"target": "es2021",
 		"lib": [
 			"es2021"
