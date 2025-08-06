@@ -7,10 +7,18 @@
 	"name": "coffic-mcp",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-03-10",
-	"compatibility_flags": ["nodejs_compat"],
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS"
+	},
 	"migrations": [
 		{
-			"new_sqlite_classes": ["MyMCP"],
+			"new_sqlite_classes": [
+				"MyMCP"
+			],
 			"tag": "v1"
 		}
 	],
