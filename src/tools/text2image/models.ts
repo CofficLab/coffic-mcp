@@ -80,8 +80,8 @@ export const text2imageModelsTool = {
     name: "text2image_models",
     prompt: "查询文本转图像支持的模型",
     schema: {
-        version: z.string().optional(),
-        recommended_only: z.boolean().optional().default(false),
+        version: z.string().optional().describe("版本，比如2.2"),
+        recommended_only: z.boolean().optional().default(false).describe("是否只返回推荐模型"),
     },
     handler: async ({ version, recommended_only }: { version?: string; recommended_only?: boolean }) => {
         try {
