@@ -1,4 +1,3 @@
-import { z } from "zod";
 
 export interface ModelInfo {
     id: string;
@@ -80,7 +79,7 @@ export const text2imageModelsTool = {
     name: "text2image_models",
     prompt: "查询文本转图像支持的模型",
     schema: {},
-    handler: async ({ version, recommended_only }: { version?: string; recommended_only?: boolean }) => {
+    handler: async () => {
         try {
             // 格式化模型信息
             const modelsText = models.map(group => {
