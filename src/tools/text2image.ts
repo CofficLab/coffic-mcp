@@ -77,7 +77,7 @@ export const makeText2ImageHandler = (apiKey: string) => {
             return {
                 content: [{
                     type: "text" as const,
-                    text: `任务已提交，任务ID: ${data.output.task_id}，请等待处理完成`
+                    text: `任务已提交，任务ID: ${data.output.task_id}，请等待15秒后查询任务状态`
                 }],
             };
         } catch (error) {
