@@ -88,7 +88,7 @@ export const text2imageTool = {
         prompt: z.string().describe("文字描述，最多800个字符"),
         size: z.string().optional().describe("图片大小，比如1024*1024"),
         n: z.number().optional().describe("生成图片数量，默认1"),
-        model: z.string().optional().describe("模型，使用text2image_models工具查询支持的模型"),
+        model: z.string().optional().describe("模型，使用text2image_models工具查询支持的模型，使用推荐的模型可得到最佳的效果"),
         dashScopeApiKey: z.string().optional().describe("DashScope API密钥"),
     },
     getHandler: makeText2ImageHandler
