@@ -19,13 +19,11 @@ export const makeText2ImageHandler = (apiKey: string) => {
         const key = dashScopeApiKey || apiKey;
 
         try {
-            // 检查API密钥
             if (!key) {
-                console.error('缺少DASHSCOPE_API_KEY');
                 return {
                     content: [{
                         type: "text" as const,
-                        text: "错误: API配置错误，缺少DASHSCOPE_API_KEY"
+                        text: "错误: 需要提供DASHSCOPE_API_KEY"
                     }],
                 };
             }
@@ -42,8 +40,6 @@ export const makeText2ImageHandler = (apiKey: string) => {
                     prompt_extend: false
                 }
             };
-
-            console.log('准备调用DashScope API，Key:', key, '请求参数是', requestBody);
 
             // 调用DashScope API
             const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis', {

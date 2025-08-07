@@ -1,6 +1,6 @@
 import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { addTool, calculateTool, text2imageTool, text2imageStatusTool, text2imageModelsTool, makeText2ImageHandler, makeText2ImageStatusHandler } from "./tools";
+import tools from "./tools";
 
 export class MyMCP extends McpAgent {
 	server = new McpServer({
@@ -13,13 +13,13 @@ export class MyMCP extends McpAgent {
 		const apiKey = (this.env as any).DASHSCOPE_API_KEY as string;
 
 		// 计算器工具
-		this.server.tool(addTool.name, addTool.schema, addTool.handler);
-		this.server.tool(calculateTool.name, calculateTool.schema, calculateTool.handler);
+		this.server.tool(tools.addTool.name, tools.addTool.schema, tools.addTool.handler);
+		this.server.tool(tools.calculateTool.name, tools.calculateTool.schema, tools.calculateTool.handler);
 
-		// 文本转图像工具 - 使用makeHandler模式
-		this.server.tool(text2imageTool.name, text2imageTool.schema, makeText2ImageHandler(apiKey));
-		this.server.tool(text2imageStatusTool.name, text2imageStatusTool.schema, makeText2ImageStatusHandler(apiKey));
-		this.server.tool(text2imageModelsTool.name, text2imageModelsTool.schema, text2imageModelsTool.handler);
+		// 文本转图像工具
+		this.server.tool(tools.text2imageTool.name, tools.text2imageTool.schema, tools.makeText2ImageHandler(apiKey));
+		this.server.tool(tools.text2imageStatusTool.name, tools.text2imageStatusTool.schema, tools.makeText2ImageStatusHandler(apiKey));
+		this.server.tool(tools.text2imageModelsTool.name, tools.text2imageModelsTool.schema, tools.text2imageModelsTool.handler);
 	}
 }
 
