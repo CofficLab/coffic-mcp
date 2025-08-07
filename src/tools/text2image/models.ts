@@ -79,38 +79,11 @@ const models: ModelGroup[] = [
 export const text2imageModelsTool = {
     name: "text2image_models",
     prompt: "查询文本转图像支持的模型",
-    schema: {
-        version: z.string().optional().describe("版本，比如2.2"),
-        recommended_only: z.boolean().optional().default(false).describe("是否只返回推荐模型"),
-    },
+    schema: {},
     handler: async ({ version, recommended_only }: { version?: string; recommended_only?: boolean }) => {
         try {
-            let filteredModels = models;
-
-            // 如果指定了版本，过滤对应版本
-            if (version) {
-                filteredModels = models.filter(group => group.version === version);
-            }
-
-            // 如果只要推荐模型，过滤推荐模型
-            if (recommended_only) {
-                filteredModels = filteredModels.map(group => ({
-                    ...group,
-                    models: group.models.filter(model => model.recommended)
-                })).filter(group => group.models.length > 0);
-            }
-
-            if (filteredModels.length === 0) {
-                return {
-                    content: [{
-                        type: "text" as const,
-                        text: version ? `未找到版本 ${version} 的模型` : "未找到符合条件的模型"
-                    }],
-                };
-            }
-
             // 格式化模型信息
-            const modelsText = filteredModels.map(group => {
+            const modelsText = models.map(group => {
                 const groupText = group.models.map(model =>
                     `- ${model.name} (${model.type})\n  描述: ${model.description}\n  推荐: ${model.recommended ? '是' : '否'}`
                 ).join('\n');
