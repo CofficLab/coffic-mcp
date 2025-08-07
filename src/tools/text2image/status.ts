@@ -37,7 +37,6 @@ export const makeText2ImageStatusHandler = (apiKey: string) => {
         try {
             // 检查API密钥
             if (!key) {
-                console.error('缺少DASHSCOPE_API_KEY');
                 return {
                     content: [{
                         type: "text" as const,
@@ -57,7 +56,6 @@ export const makeText2ImageStatusHandler = (apiKey: string) => {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('DashScope任务查询错误:', response.status, errorText);
                 return {
                     content: [{
                         type: "text" as const,
@@ -77,7 +75,6 @@ export const makeText2ImageStatusHandler = (apiKey: string) => {
             };
 
         } catch (error) {
-            console.error('查询任务状态错误:', error);
             return {
                 content: [{
                     type: "text" as const,

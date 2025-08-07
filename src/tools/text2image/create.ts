@@ -1,7 +1,4 @@
 import { z } from "zod";
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
 
 interface DashScopeResponse {
     output: {
@@ -71,9 +68,6 @@ export const makeText2ImageHandler = (apiKey: string) => {
 
             const data: DashScopeResponse = await response.json();
 
-            // 保存任务信息到本地
-            await saveTaskInfo(data.output.task_id, prompt, data);
-
             return {
                 content: [{
                     type: "text" as const,
@@ -102,49 +96,3 @@ export const text2imageTool = {
     },
     getHandler: makeText2ImageHandler
 };
-
-/**
- * 保存任务信息到本地
- * @param taskId 任务ID
- * @param prompt 原始提示词
- * @param apiResponse API响应数据
- */
-async function saveTaskInfo(taskId: string, prompt: string, apiResponse: DashScopeResponse) {
-    try {
-        // 创建任务目录
-        const assetsDir = join(process.cwd(), 'src', 'assets', 'generated-images');
-        const taskDir = join(assetsDir, taskId);
-
-        // 确保目录存在
-        if (!existsSync(assetsDir)) {
-            await mkdir(assetsDir, { recursive: true });
-        }
-        if (!existsSync(taskDir)) {
-            await mkdir(taskDir, { recursive: true });
-        }
-
-        // 创建任务信息对象
-        const taskInfo = {
-            taskId: taskId,
-            prompt: prompt,
-            createdAt: new Date().toISOString(),
-            status: apiResponse.output.task_status,
-            requestId: apiResponse.request_id,
-            apiResponse: apiResponse,
-            // 这些字段将在任务完成后更新
-            submitTime: null,
-            endTime: null,
-            images: []
-        };
-
-        // 保存任务信息到JSON文件
-        const taskInfoPath = join(taskDir, 'task-info.json');
-        await writeFile(taskInfoPath, JSON.stringify(taskInfo, null, 2), 'utf-8');
-
-        console.log(`任务信息已保存到: ${taskInfoPath}`);
-
-    } catch (error) {
-        console.error('保存任务信息失败:', error);
-        // 不抛出错误，因为主要功能（调用API）已经成功
-    }
-} 
