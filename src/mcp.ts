@@ -17,8 +17,20 @@ export class MyMCP extends McpAgent {
         this.server.tool(tools.calculateTool.name, tools.calculateTool.schema, tools.calculateTool.handler);
 
         // 文本转图像工具
-        this.server.tool(tools.text2imageTool.name, tools.text2imageTool.schema, tools.makeText2ImageHandler(apiKey));
-        this.server.tool(tools.text2imageStatusTool.name, tools.text2imageStatusTool.schema, tools.makeText2ImageStatusHandler(apiKey));
-        this.server.tool(tools.text2imageModelsTool.name, tools.text2imageModelsTool.schema, tools.text2imageModelsTool.handler);
+        this.server.tool(tools.text2imageTool.name,
+            tools.text2imageTool.prompt,
+            tools.text2imageTool.schema,
+            tools.makeText2ImageHandler(apiKey)
+        );
+        this.server.tool(tools.text2imageStatusTool.name,
+            tools.text2imageStatusTool.prompt,
+            tools.text2imageStatusTool.schema,
+            tools.makeText2ImageStatusHandler(apiKey)
+        );
+        this.server.tool(tools.text2imageModelsTool.name,
+            tools.text2imageModelsTool.prompt,
+            tools.text2imageModelsTool.schema,
+            tools.text2imageModelsTool.handler
+        );
     }
 }   

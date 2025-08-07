@@ -78,6 +78,7 @@ const models: ModelGroup[] = [
 
 export const text2imageModelsTool = {
     name: "text2image_models",
+    prompt: "查询文本转图像支持的模型",
     schema: {
         version: z.string().optional(),
         recommended_only: z.boolean().optional().default(false),

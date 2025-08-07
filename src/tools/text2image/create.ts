@@ -83,6 +83,7 @@ export const makeText2ImageHandler = (apiKey: string) => {
 
 export const text2imageTool = {
     name: "text2image",
+    prompt: "根据提供的文字生成图片",
     schema: {
         prompt: z.string(),
         size: z.string().optional(),

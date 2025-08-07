@@ -87,6 +87,7 @@ export const makeText2ImageStatusHandler = (apiKey: string) => {
 
 export const text2imageStatusTool = {
     name: "text2image_status",
+    prompt: "查询文本转图像任务状态",
     schema: {
         task_id: z.string(),
         dashScopeApiKey: z.string().optional(),
