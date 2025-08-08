@@ -37,7 +37,11 @@ export const makeText2ImageHandler = (apiKey: string) => {
                 parameters: {
                     size: size || '1024*1024',
                     n: n || 1,
-                    prompt_extend: false
+                    prompt_extend: false,
+                    // 随机数种子，用于控制模型生成内容的随机性。seed参数取值范围是[0, 2147483647]。
+                    // 如果不提供，则算法自动生成一个随机数作为种子。如果给定了，则根据n的值分别为n张图片生成seed参数，例如n=4，算法将分别生成seed、seed+ 1、seed+ 2、seed+3作为参数的图片。
+                    // 如果您希望生成内容保持相对稳定，请使用相同的seed参数值。
+                    seed: 171126
                 }
             };
 
