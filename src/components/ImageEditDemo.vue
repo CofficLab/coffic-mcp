@@ -2,8 +2,8 @@
   import { useImageEdit } from '@/composables/useImageEdit';
   import { useFormValidation } from '@/composables/useFormValidation';
   import { useUIState } from '@/composables/useUIState';
+  import TaskHistory from './TaskHistory.vue';
 
-  // 使用组合式函数
   const {
     // 状态
     imageInputType,
@@ -56,8 +56,6 @@
 
     return baseRules;
   };
-
-  const { validateForm, hasErrors } = useFormValidation(getValidationRules());
 
   // UI状态管理
   const { showSuccessMessage, showErrorMessage } = useUIState();
@@ -385,6 +383,11 @@
           :alt="`结果图片 ${index + 1}`"
           class="w-full h-auto rounded-md border border-gray-200 shadow-sm" />
       </div>
+    </div>
+
+    <!-- 任务历史记录 -->
+    <div class="mt-8">
+      <TaskHistory />
     </div>
   </div>
 </template>

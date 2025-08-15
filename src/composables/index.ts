@@ -6,6 +6,9 @@ export { useLocalStorage } from './useLocalStorage'
 export { useApiKeyManager } from './useApiKeyManager'
 export { useFunctionTypes } from './useFunctionTypes'
 
+// 导出组件
+export { default as TaskHistory } from '@/components/TaskHistory.vue'
+
 // 重新导出类型
 export type { ValidationRule, ValidationRules } from './useFormValidation'
 export type { ApiKeyConfig } from './useApiKeyManager'

@@ -2,6 +2,16 @@ import { ref, computed, watch } from 'vue'
 import { useLocalStorage } from './useLocalStorage'
 import { useFunctionTypes } from './useFunctionTypes'
 
+// 任务类型定义
+export interface ImageEditTask {
+    id: string
+    prompt: string
+    functionType: string
+    timestamp: number
+    status: 'pending' | 'completed' | 'failed'
+    result?: string
+}
+
 export function useImageEdit() {
     // 使用功能类型管理
     const {
@@ -27,9 +37,10 @@ export function useImageEdit() {
     const rightScale = ref(1.5)
     const upscaleFactor = ref(2)
     const n = ref(1)
-    // 使用本地存储管理API密钥和编辑指令
+    // 使用本地存储管理API密钥、编辑指令和任务历史
     const { storedValue: dashScopeApiKey } = useLocalStorage('dashScopeApiKey', '')
     const { storedValue: storedPrompt } = useLocalStorage('imageEditPrompt', '')
+    const { storedValue: taskHistory } = useLocalStorage('imageEditTaskHistory', [] as ImageEditTask[])
 
     // 初始化编辑指令
     if (storedPrompt.value && !prompt.value) {
@@ -176,6 +187,19 @@ export function useImageEdit() {
                 images: [],
             }
 
+            // 保存任务到历史记录
+            if (response.success && response.taskId) {
+                const newTask = {
+                    id: response.taskId,
+                    prompt: prompt.value,
+                    functionType: functionType.value,
+                    timestamp: Date.now(),
+                    status: 'pending' as const,
+                    result: response.message
+                }
+                taskHistory.value = [newTask, ...taskHistory.value]
+            }
+
             showResult.value = true
         } catch (error) {
             console.error('编辑任务提交失败:', error)
@@ -248,6 +272,9 @@ export function useImageEdit() {
         clearPrompt: () => {
             prompt.value = ''
             storedPrompt.value = ''
-        }
+        },
+
+        // 任务历史
+        taskHistory
     }
 }
