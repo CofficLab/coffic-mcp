@@ -93,7 +93,7 @@ export const imageEditTool = {
     name: "imageedit",
     prompt: "根据提供的图片和提示词进行图像编辑",
     schema: {
-        imageUrl: z.string().describe("需要编辑的图片URL"),
+        imageUrl: z.string().describe("输入图像的URL或 Base64 编码数据，其中 Base64 编码格式为：data:{MIME_type};base64,{base64_data}"),
         prompt: z.string().describe("编辑指令描述，最多800个字符"),
         function: z.enum(["stylization_all", "stylization_local", "description_edit", "description_edit_with_mask", "remove_watermark", "inpainting", "expand", "super_resolution", "colorization", "doodle", "control_cartoon_feature"]).optional().describe("编辑功能类型，默认为整体风格化"),
         maskUrl: z.string().optional().describe("蒙版图片URL，用于指定编辑区域（局部重绘、图像修复等需要）"),
