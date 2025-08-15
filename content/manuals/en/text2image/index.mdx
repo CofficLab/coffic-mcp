@@ -1,0 +1,50 @@
+---
+title: 'Text-to-Image Tools'
+description: 'Text-to-image tools based on DashScope API, supporting multiple models and parameter configurations'
+folder: true
+order: 2
+---
+
+# Text-to-Image Tools
+
+Text-to-image tools provide powerful text-to-image generation capabilities, supporting multiple AI models and rich parameter configurations to generate high-quality images from text descriptions.
+
+## Available Tools
+
+- **[Text-to-Image](./create.mdx)** - Main text-to-image functionality
+- **[Model Query](./models.mdx)** - Query supported generation models
+- **[Task Status](./status.mdx)** - Query generation task status
+
+## Core Functions
+
+- **Text Description Generation** - Generate images based on detailed text descriptions
+- **Multiple Size Support** - Support various resolutions from 512x512 to 1440x1440
+- **Batch Generation** - Generate multiple images at once
+- **Model Selection** - Support multiple AI models, each with unique characteristics
+- **Parameter Tuning** - Configurable generation parameters to meet different needs
+
+## Technical Features
+
+- Based on Alibaba Cloud DashScope API
+- Supports asynchronous task processing
+- Provides complete error handling
+- Supports multiple image formats
+- Configurable generation parameters
+- Random seed control
+
+## Application Scenarios
+
+- **Creative Design** - Generate concept images for design projects
+- **Content Creation** - Generate illustrations for articles and blogs
+- **Prototype Design** - Quickly generate product prototype images
+- **Artistic Creation** - Explore the possibilities of AI art
+- **Education and Training** - Generate visual materials for educational content
+
+## Usage Workflow
+
+1. **Select Model** - Use `text2image_models` to query available models
+2. **Submit Task** - Use `text2image` tool to generate images
+3. **Get Task ID** - API returns task identifier
+4. **Wait for Execution** - Usually takes 10-20 seconds
+5. **Query Status** - Use `text2image_status` tool
+6. **Get Results** - Obtain generated image URLs after task completion

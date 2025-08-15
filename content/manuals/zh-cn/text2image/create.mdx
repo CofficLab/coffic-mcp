@@ -1,11 +1,11 @@
 ---
-title: '文生图工具'
-description: '基于DashScope API的文本转图像工具，支持多种模型和参数配置'
+title: '文生图'
+description: '主要的文本转图像功能，支持多种模型和参数配置'
 folder: false
-order: 2
+order: 1
 ---
 
-# {frontmatter.title}
+# 文生图
 
 import { CodeExample } from '@coffic/cosy-ui';
 
@@ -25,22 +25,6 @@ text2image({
 })
 ```
 
-### 模型查询 (`text2image_models`)
-查询支持的文生图模型，了解各模型的特点和推荐程度。
-
-```typescript
-text2image_models({})
-```
-
-### 任务状态查询 (`text2image_status`)
-查询文生图任务的执行状态，获取生成的图片结果。
-
-```typescript
-text2image_status({
-  task_id: "your_task_id_here"
-})
-```
-
 ## 📋 参数说明
 
 ### text2image 工具参数
@@ -51,13 +35,6 @@ text2image_status({
 | `size` | string | ❌ | 图像尺寸，默认1024*1024，支持[512, 1440]像素范围 |
 | `n` | number | ❌ | 生成图片数量，默认1 |
 | `model` | string | ❌ | 使用的模型，默认wan2.2-t2i-plus |
-| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
-
-### text2image_status 工具参数
-
-| 参数 | 类型 | 必需 | 描述 |
-|------|------|------|------|
-| `task_id` | string | ✅ | 任务ID |
 | `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
 
 ## 🎨 支持的模型
