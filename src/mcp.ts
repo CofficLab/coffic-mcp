@@ -32,5 +32,22 @@ export class MyMCP extends McpAgent {
             tools.text2imageModelsTool.schema,
             tools.text2imageModelsTool.handler
         );
+
+        // 图像编辑工具
+        this.server.tool(tools.imageEditTool.name,
+            tools.imageEditTool.prompt,
+            tools.imageEditTool.schema,
+            tools.makeImageEditHandler(apiKey)
+        );
+        this.server.tool(tools.imageEditStatusTool.name,
+            tools.imageEditStatusTool.prompt,
+            tools.imageEditStatusTool.schema,
+            tools.makeImageEditStatusHandler(apiKey)
+        );
+        this.server.tool(tools.imageEditModelsTool.name,
+            tools.imageEditModelsTool.prompt,
+            tools.imageEditModelsTool.schema,
+            tools.imageEditModelsTool.handler
+        );
     }
 }   

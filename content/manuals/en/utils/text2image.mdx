@@ -1,0 +1,185 @@
+---
+title: 'Text-to-Image Tools'
+description: 'Text-to-image tools based on DashScope API, supporting multiple models and parameter configurations'
+folder: false
+order: 2
+---
+
+# {frontmatter.title}
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+Text-to-image tools based on DashScope API, supporting multiple models and parameter configurations, capable of generating high-quality images from text descriptions.
+
+## 🚀 Main Features
+
+### Text to Image (`text2image`)
+Generate images based on provided text descriptions, supporting custom dimensions, quantities, and model selection.
+
+```typescript
+text2image({
+  prompt: "A cute little cat sitting in a garden, bright sunshine, flowers blooming",
+  size: "1024*1024",
+  n: 1,
+  model: "wan2.2-t2i-plus"
+})
+```
+
+### Model Query (`text2image_models`)
+Query supported text-to-image models to understand the characteristics and recommendations of each model.
+
+```typescript
+text2image_models({})
+```
+
+### Task Status Query (`text2image_status`)
+Query the execution status of text-to-image tasks to obtain generated image results.
+
+```typescript
+text2image_status({
+  task_id: "your_task_id_here"
+})
+```
+
+## 📋 Parameter Description
+
+### text2image Tool Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `prompt` | string | ✅ | Text description, maximum 800 characters |
+| `size` | string | ❌ | Image dimensions, default 1024*1024, supports [512, 1440] pixel range |
+| `n` | number | ❌ | Number of images to generate, default 1 |
+| `model` | string | ❌ | Model to use, default wan2.2-t2i-plus |
+| `dashScopeApiKey` | string | ❌ | DashScope API key |
+
+### text2image_status Tool Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `task_id` | string | ✅ | Task ID |
+| `dashScopeApiKey` | string | ❌ | DashScope API key |
+
+## 🎨 Supported Models
+
+### Tongyi Wanxiang Text-to-Image 2.2 (Latest Version)
+
+#### wan2.2-t2i-flash (Speed Version) ⭐ Recommended
+- **Description**: Wanxiang 2.2 Speed Version, current latest model. Comprehensive upgrade in creativity, stability, and realistic texture, fast generation speed, high cost-effectiveness.
+- **Use Cases**: Fast generation, batch production, cost-sensitive scenarios
+
+#### wan2.2-t2i-plus (Professional Version) ⭐ Recommended
+- **Description**: Wanxiang 2.2 Professional Version, current latest model. Comprehensive upgrade in creativity, stability, and realistic texture, rich generation details.
+- **Use Cases**: High-quality requirements, detail-rich creative scenarios
+
+### Tongyi Wanxiang Text-to-Image 2.1
+
+#### wanx2.1-t2i-turbo (Speed Version)
+- **Description**: Wanxiang 2.1 Speed Version. Fast generation speed, balanced effects.
+- **Use Cases**: Scenarios requiring fast generation with moderate quality requirements
+
+#### wanx2.1-t2i-plus (Professional Version)
+- **Description**: Wanxiang 2.1 Professional Version. Generated images have richer details, slightly slower speed.
+- **Use Cases**: Scenarios with high image quality requirements
+
+### Tongyi Wanxiang Text-to-Image 2.0
+
+#### wanx2.0-t2i-turbo (Speed Version)
+- **Description**: Wanxiang 2.0 Speed Version. Excels at textured portraits and creative design, high cost-effectiveness.
+- **Use Cases**: Portrait generation, creative design, budget-limited scenarios
+
+## 📖 Usage Workflow
+
+1. **Submit Generation Task**: Use the `text2image` tool
+2. **Get Task ID**: API returns task identifier
+3. **Wait for Execution**: Usually takes about 15 seconds
+4. **Query Status**: Use the `text2image_status` tool
+5. **Get Results**: Obtain generated image URLs after task completion
+
+## 🔧 Technical Features
+
+### Image Dimension Support
+- **Pixel Range**: [512, 1440]
+- **Maximum Resolution**: 2 million pixels
+- **Common Dimensions**: 1024*1024, 1024*768, 768*1024
+- **Custom Combinations**: Supports arbitrary width-height combinations
+
+### Random Seed Control
+- **Seed Range**: [0, 2147483647]
+- **Stability**: Using the same seed can generate relatively stable content
+- **Batch Generation**: Supports generating incremental seeds for multiple images
+
+### Asynchronous Task Processing
+- **Non-blocking**: Supports long-running generation tasks
+- **Status Queries**: Real-time query of task execution progress
+- **Error Handling**: Comprehensive error handling and status feedback
+
+## 💡 Usage Tips
+
+### Prompt Optimization
+```typescript
+// Basic description
+text2image({
+  prompt: "A cat"
+})
+
+// Detailed description (recommended)
+text2image({
+  prompt: "An orange cat sitting on a windowsill, sunlight streaming through the window onto it, background is a cozy living room, realistic style, high-definition quality"
+})
+
+// Artistic style description
+text2image({
+  prompt: "Dreamlike forest scene, fairy tale style, soft colors, full of magical elements"
+})
+```
+
+### Model Selection Suggestions
+```typescript
+// Fast generation, cost priority
+text2image({
+  prompt: "Simple landscape painting",
+  model: "wan2.2-t2i-flash"
+})
+
+// High quality requirements, detail priority
+text2image({
+  prompt: "Detailed portrait",
+  model: "wan2.2-t2i-plus"
+})
+```
+
+### Batch Generation
+```typescript
+// Generate multiple images
+text2image({
+  prompt: "City night scenes from different angles",
+  n: 4,
+  size: "1024*768"
+})
+```
+
+## ⚠️ Important Notes
+
+- **API Key**: Requires a valid DashScope API key
+- **Asynchronous Tasks**: All generation tasks are executed asynchronously, requiring waiting and status queries
+- **Dimension Limits**: Image dimensions must be within [512, 1440] pixel range
+- **Character Limits**: Prompts are limited to maximum 800 characters
+- **Model Selection**: Recommended to use version 2.2 models for best results
+- **Cost Control**: Speed version models have higher cost-effectiveness, suitable for batch generation
+
+## 🔍 Error Handling
+
+The tools include comprehensive error handling mechanisms:
+
+- **API Key Errors**: Prompt for missing or invalid API keys
+- **Network Errors**: Handle network request failures
+- **API Errors**: Handle error information returned by DashScope API
+- **Task Status**: Real-time feedback on task execution status
+
+## 🚀 Performance Optimization
+
+- **Model Selection**: Choose appropriate models based on requirements (Speed vs Professional versions)
+- **Batch Generation**: Submit multiple generation tasks at once to improve efficiency
+- **Seed Reuse**: Use the same seed to generate content with similar styles
+- **Dimension Optimization**: Choose appropriate image dimensions to balance quality and speed
