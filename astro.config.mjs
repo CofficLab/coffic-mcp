@@ -6,6 +6,8 @@ import mdx from '@astrojs/mdx';
 
 import vue from '@astrojs/vue';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   i18n: {
@@ -31,4 +33,5 @@ export default defineConfig({
   },
 
   integrations: [mdx(), vue()],
+  adapter: cloudflare(),
 });

@@ -16,6 +16,7 @@
     "inspect": "npx @modelcontextprotocol/inspector@latest"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.3",
     "@astrojs/mdx": "^4.3.3",
     "@astrojs/vue": "^5.1.0",
     "@coffic/cosy-content": "^0.2.25",
