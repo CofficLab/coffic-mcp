@@ -1,11 +1,11 @@
 ---
 // 这个组件用于查询所有支持的图像编辑功能
+import { Button, Container } from '@coffic/cosy-ui';
 ---
 
 <div class="get-all-capabilities" ignore-heading>
-  <h3>查询所有支持的功能</h3>
-  <button id="getAllCapabilities" class="test-btn">查询所有功能</button>
-  <div id="allCapabilitiesResult" class="result-area"></div>
+  <Button id="getAllCapabilities" class="test-btn">查询所有功能</Button>
+  <Container id="allCapabilitiesResult" class="result-area" />
 </div>
 
 <script>
@@ -84,13 +84,6 @@
 
   .test-btn:hover {
     background-color: #0056b3;
-  }
-
-  .result-area {
-    margin-top: 15px;
-    padding: 15px;
-    border-radius: 5px;
-    min-height: 50px;
   }
 
   .success-result {
