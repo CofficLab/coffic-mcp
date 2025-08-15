@@ -24,3 +24,7 @@ export {
     ImageEditCore,
     createImageEditCore
 } from './core';
+
+// 导出状态查询功能
+export { createImageEditStatusCore, ImageEditStatusCore } from './status';
+export type { ImageEditStatusRequest, ImageEditStatusResult, ImageEditStatusResponse } from './status';

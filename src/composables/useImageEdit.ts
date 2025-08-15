@@ -1,4 +1,5 @@
 import { ref, computed, watch } from 'vue'
+import { actions } from 'astro:actions'
 import { useLocalStorage } from './useLocalStorage'
 import { useFunctionTypes } from './useFunctionTypes'
 
@@ -84,15 +85,35 @@ export function useImageEdit() {
     // 调用图像编辑API
     const callImageEditAction = async (params: any) => {
         try {
-            // 这里应该调用实际的API
-            // 目前模拟API调用
-            await new Promise((resolve) => setTimeout(resolve, 1000))
+            // 调用图像编辑 Action
+            const { data, error } = await actions.imageEditAction({
+                imageUrl: params.imageUrl,
+                prompt: params.prompt,
+                function: params.function,
+                maskUrl: params.maskUrl,
+                n: params.n,
+                topScale: params.topScale,
+                bottomScale: params.bottomScale,
+                leftScale: params.leftScale,
+                rightScale: params.rightScale,
+                upscaleFactor: params.upscaleFactor,
+                model: params.model,
+                dashScopeApiKey: params.dashScopeApiKey,
+            })
+
+            if (error) {
+                return {
+                    success: false,
+                    message: `调用失败: ${error.message ?? '未知错误'}`,
+                    images: [] as string[]
+                }
+            }
 
             return {
-                success: true,
-                taskId: `task_${Date.now()}`,
-                message: '图像编辑任务已提交，正在处理中...',
-                images: [] as string[]
+                success: data.success,
+                taskId: data.taskId || '',
+                message: data.message || '图像编辑任务已提交，正在处理中...',
+                images: [] // 图像编辑任务提交后，图片需要查询状态获取
             }
         } catch (error) {
             return {
@@ -105,9 +126,6 @@ export function useImageEdit() {
 
     // 提交编辑任务
     const submitEditTask = async () => {
-        console.log('submitEditTask 被调用');
-        console.log('imageInputType:', imageInputType.value);
-
         // 验证图片输入
         let finalImageInput = ''
         if (imageInputType.value === 'url') {

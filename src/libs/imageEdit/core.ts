@@ -103,6 +103,8 @@ export class ImageEditCore {
                 body: JSON.stringify(requestBody)
             });
 
+            console.log(response);
+
             if (!response.ok) {
                 const errorText = await response.json();
                 return {

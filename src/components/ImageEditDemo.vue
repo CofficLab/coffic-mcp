@@ -69,11 +69,6 @@
 
   // 增强的提交函数，包含验证
   const handleSubmit = async () => {
-    console.log('handleSubmit 被调用');
-    console.log('imageInputType:', imageInputType.value);
-    console.log('prompt:', prompt.value);
-    console.log('dashScopeApiKey:', dashScopeApiKey.value);
-
     // 根据输入类型构建验证数据
     const formData: Record<string, any> = {
       prompt: prompt.value,
@@ -83,13 +78,10 @@
     // 根据选择的输入类型添加相应的验证
     if (imageInputType.value === 'url') {
       formData.imageUrl = imageUrl.value;
-      console.log('使用URL输入:', imageUrl.value);
     } else if (imageInputType.value === 'base64') {
       formData.imageBase64 = imageBase64.value;
-      console.log('使用Base64输入:', imageBase64.value);
     } else if (imageInputType.value === 'file') {
       formData.imageFile = imageFile.value;
-      console.log('使用文件输入:', imageFile.value);
     }
 
     // 获取当前输入类型的验证规则并验证表单
@@ -98,7 +90,6 @@
       useFormValidation(currentValidationRules);
 
     const errors = validateCurrentForm(formData);
-    console.log('验证结果:', errors);
 
     if (hasCurrentErrors(errors)) {
       const errorMessage = Object.values(errors).join(', ');
@@ -106,10 +97,8 @@
       return;
     }
 
-    console.log('开始提交任务...');
     // 验证通过，提交任务
     await submitEditTask();
-    console.log('任务提交完成');
 
     if (result.value.taskId) {
       showSuccessMessage('任务提交成功！');
