@@ -2,6 +2,7 @@
   import { useImageEdit, type ImageEditTask } from '@/composables/useImageEdit';
   import { useTaskStatus } from '@/composables/useTaskStatus';
   import { EyeIcon, TrashIcon, RefreshIcon } from '@/components/icons';
+  import ImageDisplay from './ImageDisplay.vue';
 
   // 获取任务历史和功能类型工具方法
   const { taskHistory, getFunctionTypeDisplayName } = useImageEdit();
@@ -60,6 +61,28 @@
   };
 
   // 任务状态查询逻辑已迁移至 useTaskStatus 组合式
+
+  // 从任务结果中提取图片URL
+  const extractImageUrls = (result: string): string[] => {
+    if (!result || !result.includes('生成的图片:')) return [];
+
+    try {
+      const imagePart = result.split('生成的图片:')[1]?.trim();
+      if (!imagePart) return [];
+
+      // 提取URL（假设URL是完整的http链接）
+      const urlRegex = /https?:\/\/[^\s]+/g;
+      const urls = imagePart.match(urlRegex);
+
+      console.log('提取的图片URLs:', urls);
+      return urls || [];
+    } catch (error) {
+      console.error('提取图片URL失败:', error);
+      return [];
+    }
+  };
+
+  // 处理图片加载错误
 </script>
 
 <template>
@@ -75,7 +98,7 @@
           v-if="taskHistory.length > 0"
           @click="clearAllTasks"
           class="px-3 py-2 text-sm text-red-600 border border-red-300 rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200">
-          清空历史
+          清空
         </button>
       </div>
     </div>
@@ -97,6 +120,7 @@
             <th class="text-sm font-medium">功能类型</th>
             <th class="text-sm font-medium">编辑指令</th>
             <th class="text-sm font-medium">提交时间</th>
+            <th class="text-sm font-medium">生成图片</th>
             <th class="text-sm font-medium text-center">操作</th>
           </tr>
         </thead>
@@ -151,6 +175,16 @@
             <!-- 提交时间 -->
             <td class="text-sm text-gray-600">
               {{ formatTime(task.timestamp) }}
+            </td>
+
+            <!-- 生成图片 -->
+            <td class="min-w-48">
+              <ImageDisplay
+                v-if="task.result && task.result.includes('生成的图片:')"
+                :images="extractImageUrls(task.result)"
+                size="md"
+                :show-preview="true" />
+              <div v-else class="text-xs text-gray-400">暂无图片</div>
             </td>
 
             <!-- 操作 -->
