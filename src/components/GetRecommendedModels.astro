@@ -3,10 +3,10 @@
 import { Button, Container } from '@coffic/cosy-ui';
 ---
 
-<div class="get-recommended-models" ignore-heading>
-  <Button id="getRecommendedModels" class="test-btn">查询推荐模型</Button>
-  <Container id="recommendedModelsResult" class="result-area" />
-</div>
+<Container ignore-heading>
+  <Button id="getRecommendedModels">查询推荐模型</Button>
+  <Container id="recommendedModelsResult" />
+</Container>
 
 <script>
   import { actions } from 'astro:actions';
@@ -79,29 +79,6 @@ import { Button, Container } from '@coffic/cosy-ui';
 </script>
 
 <style>
-  .get-recommended-models {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #e1e5e9;
-    border-radius: 8px;
-    background-color: #f8f9fa;
-  }
-
-  .test-btn {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 10px 5px;
-  }
-
-  .test-btn:hover {
-    background-color: #0056b3;
-  }
-
   .success-result {
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
