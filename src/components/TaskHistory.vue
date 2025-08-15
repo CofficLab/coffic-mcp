@@ -1,10 +1,13 @@
 <script setup lang="ts">
   import { useImageEdit, type ImageEditTask } from '@/composables/useImageEdit';
-  import { EyeIcon, TrashIcon } from '@/components/icons';
+  import { useTaskStatus } from '@/composables/useTaskStatus';
+  import { EyeIcon, TrashIcon, RefreshIcon } from '@/components/icons';
   import ImageDisplay from './ImageDisplay.vue';
 
   // 获取任务历史和功能类型工具方法
   const { taskHistory, getFunctionTypeDisplayName } = useImageEdit();
+  // 任务状态查询组合式
+  const { queryingStatus, queryTaskStatus } = useTaskStatus();
 
   // 格式化时间
   const formatTime = (timestamp: number) => {
@@ -180,6 +183,23 @@
             <!-- 操作 -->
             <td class="text-center">
               <div class="flex gap-2 justify-center">
+                <!-- 查询状态按钮 -->
+                <button
+                  @click="queryTaskStatus(task)"
+                  :disabled="queryingStatus.has(task.id)"
+                  class="btn btn-ghost btn-xs"
+                  :class="{ loading: queryingStatus.has(task.id) }"
+                  :title="
+                    queryingStatus.has(task.id) ? '查询中...' : '查询状态'
+                  ">
+                  <RefreshIcon
+                    v-if="!queryingStatus.has(task.id)"
+                    class="w-4 h-4" />
+                  <span
+                    v-else
+                    class="loading loading-spinner loading-xs"></span>
+                </button>
+
                 <!-- 查看详情按钮 -->
                 <button
                   @click="viewTaskDetails(task)"
