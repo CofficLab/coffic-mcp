@@ -10,8 +10,34 @@ import { Button, Heading } from '@coffic/cosy-ui';
 
   <div class="demo-form">
     <div class="form-group">
+      <label for="imageInput">图片输入方式:</label>
+      <select id="imageInputType">
+        <option value="url">图片URL</option>
+        <option value="base64">Base64图片</option>
+        <option value="file">本地文件</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="urlInputGroup">
       <label for="imageUrl">图片URL:</label>
       <input type="text" id="imageUrl" placeholder="请输入图片URL" />
+    </div>
+
+    <div class="form-group" id="base64InputGroup" style="display: none;">
+      <label for="imageBase64">Base64图片:</label>
+      <textarea
+        id="imageBase64"
+        placeholder="请输入base64编码的图片数据"
+        rows="4"></textarea>
+      <small class="help-text"
+        >支持格式: data:image/jpeg;base64,/9j/4AAQSkZJR......</small
+      >
+    </div>
+
+    <div class="form-group" id="fileInputGroup" style="display: none;">
+      <label for="imageFile">本地图片文件:</label>
+      <input type="file" id="imageFile" accept="image/*" />
+      <small class="help-text">支持JPG、PNG、WEBP等格式，最大10MB</small>
     </div>
 
     <div class="form-group">
@@ -90,6 +116,18 @@ import { Button, Heading } from '@coffic/cosy-ui';
       <input type="number" id="n" value="1" min="1" max="4" />
     </div>
 
+    <div class="form-group">
+      <label for="dashScopeApiKey">DashScope API密钥:</label>
+      <input
+        type="password"
+        id="dashScopeApiKey"
+        placeholder="请输入您的DashScope API密钥"
+      />
+      <small class="help-text"
+        >用于调用阿里云DashScope图像编辑API，请妥善保管</small
+      >
+    </div>
+
     <Button id="submitBtn">提交编辑任务</Button>
   </div>
 
@@ -102,6 +140,8 @@ import { Button, Heading } from '@coffic/cosy-ui';
 </div>
 
 <script>
+  import { actions } from 'astro:actions';
+
   // 功能类型配置
   const functionConfigs = {
     stylization_all: {
@@ -172,6 +212,34 @@ import { Button, Heading } from '@coffic/cosy-ui';
     },
   };
 
+  // 监听图片输入方式变化
+  document.getElementById('imageInputType')?.addEventListener('change', (e) => {
+    const target = e.target as HTMLSelectElement;
+    const selectedType = target.value;
+
+    // 隐藏所有输入组
+    const urlGroup = document.getElementById('urlInputGroup');
+    const base64Group = document.getElementById('base64InputGroup');
+    const fileGroup = document.getElementById('fileInputGroup');
+
+    if (urlGroup) urlGroup.style.display = 'none';
+    if (base64Group) base64Group.style.display = 'none';
+    if (fileGroup) fileGroup.style.display = 'none';
+
+    // 显示选中的输入组
+    switch (selectedType) {
+      case 'url':
+        if (urlGroup) urlGroup.style.display = 'block';
+        break;
+      case 'base64':
+        if (base64Group) base64Group.style.display = 'block';
+        break;
+      case 'file':
+        if (fileGroup) fileGroup.style.display = 'block';
+        break;
+    }
+  });
+
   // 监听功能类型变化
   document.getElementById('function')?.addEventListener('change', (e) => {
     const target = e.target as HTMLSelectElement;
@@ -200,8 +268,16 @@ import { Button, Heading } from '@coffic/cosy-ui';
 
   // 提交编辑任务
   document.getElementById('submitBtn')?.addEventListener('click', async () => {
+    const imageInputType = (
+      document.getElementById('imageInputType') as HTMLSelectElement | null
+    )?.value;
     const imageUrl = (document.getElementById('imageUrl') as HTMLInputElement)
       ?.value;
+    const imageBase64 = (
+      document.getElementById('imageBase64') as HTMLTextAreaElement
+    )?.value;
+    const imageFile = (document.getElementById('imageFile') as HTMLInputElement)
+      ?.files?.[0];
     const prompt = (document.getElementById('prompt') as HTMLTextAreaElement)
       ?.value;
     const functionType = (
@@ -223,18 +299,55 @@ import { Button, Heading } from '@coffic/cosy-ui';
       document.getElementById('upscaleFactor') as HTMLInputElement
     )?.value;
     const n = (document.getElementById('n') as HTMLInputElement)?.value;
+    const dashScopeApiKey = (
+      document.getElementById('dashScopeApiKey') as HTMLInputElement
+    )?.value;
 
-    if (!imageUrl || !prompt) {
-      alert('请填写图片URL和编辑指令');
+    // 验证图片输入
+    let finalImageInput = '';
+    if (imageInputType === 'url') {
+      if (!imageUrl) {
+        alert('请填写图片URL');
+        return;
+      }
+      finalImageInput = imageUrl;
+    } else if (imageInputType === 'base64') {
+      if (!imageBase64) {
+        alert('请填写base64图片数据');
+        return;
+      }
+      finalImageInput = imageBase64;
+    } else if (imageInputType === 'file') {
+      if (!imageFile) {
+        alert('请选择图片文件');
+        return;
+      }
+      // 处理文件上传，转换为base64
+      try {
+        finalImageInput = await fileToBase64(imageFile);
+      } catch (error) {
+        alert('文件处理失败: ' + error);
+        return;
+      }
+    }
+
+    if (!prompt) {
+      alert('请填写编辑指令');
+      return;
+    }
+
+    if (!dashScopeApiKey) {
+      alert('请输入DashScope API密钥');
       return;
     }
 
     // 构建请求参数
     const params: any = {
-      imageUrl,
+      imageUrl: finalImageInput, // 使用最终的图片输入（URL、base64或文件转换的base64）
       prompt,
       function: functionType,
       n: parseInt(n) || 1,
+      dashScopeApiKey, // 添加API密钥
     };
 
     // 添加蒙版参数
@@ -263,9 +376,8 @@ import { Button, Heading } from '@coffic/cosy-ui';
     }
 
     try {
-      // 这里应该调用实际的API
-      // 目前只是模拟响应
-      const response = await simulateImageEdit(params);
+      // 调用真实的Astro Action
+      const response = await callImageEditAction(params);
       displayResult(response);
     } catch (error) {
       console.error('编辑任务提交失败:', error);
@@ -273,16 +385,66 @@ import { Button, Heading } from '@coffic/cosy-ui';
     }
   });
 
-  // 模拟图像编辑API调用
-  async function simulateImageEdit(params: any) {
-    // 模拟API延迟
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  // 将文件转换为base64
+  function fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          resolve(reader.result);
+        } else {
+          reject(new Error('文件读取失败'));
+        }
+      };
+      reader.onerror = () => reject(new Error('文件读取错误'));
+      reader.readAsDataURL(file);
+    });
+  }
 
-    return {
-      taskId: `task_${Date.now()}`,
-      status: 'pending',
-      message: '任务已提交，正在处理中...',
-    };
+  // 调用图像编辑Astro Action
+  async function callImageEditAction(params: any) {
+    try {
+      // 使用正确的Astro Actions调用方式
+      const { data, error } = await actions.imageEditAction(params);
+
+      if (error) {
+        return {
+          taskId: undefined,
+          status: 'error',
+          message: `调用失败: ${error.message}`,
+        };
+      }
+
+      if (data) {
+        const result = data as any;
+        if (result.success) {
+          return {
+            taskId: result.taskId,
+            status: 'pending',
+            message: result.message,
+          };
+        } else {
+          return {
+            taskId: undefined,
+            status: 'error',
+            message: result.message,
+          };
+        }
+      }
+
+      return {
+        taskId: undefined,
+        status: 'error',
+        message: '未知错误',
+      };
+    } catch (error) {
+      console.error('调用Action失败:', error);
+      return {
+        taskId: undefined,
+        status: 'error',
+        message: `调用失败: ${error instanceof Error ? error.message : '未知错误'}`,
+      };
+    }
   }
 
   // 显示结果
@@ -337,6 +499,26 @@ import { Button, Heading } from '@coffic/cosy-ui';
   .form-group textarea {
     resize: vertical;
     min-height: 80px;
+  }
+
+  .form-group select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .help-text {
+    color: #666;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+  }
+
+  #imageBase64 {
+    font-family: monospace;
+    font-size: 12px;
   }
 
   .expand-inputs {

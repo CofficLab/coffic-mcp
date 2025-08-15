@@ -15,11 +15,23 @@ import { CodeExample } from '@coffic/cosy-ui';
 
 ## 使用方法
 
+### 使用图片URL
 ```typescript
 imageedit({
   imageUrl: "https://example.com/image.jpg",
   prompt: "转换成法国绘本风格",
-  function: "stylization_all"
+  function: "stylization_all",
+  dashScopeApiKey: "your_api_key_here"
+})
+```
+
+### 使用Base64图片数据
+```typescript
+imageedit({
+  imageUrl: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=",
+  prompt: "转换成法国绘本风格",
+  function: "stylization_all",
+  dashScopeApiKey: "your_api_key_here"
 })
 ```
 
@@ -27,12 +39,12 @@ imageedit({
 
 | 参数 | 类型 | 必需 | 描述 |
 |------|------|------|------|
-| `imageUrl` | string | ✅ | 需要编辑的图片URL |
+| `imageUrl` | string | ✅ | 需要编辑的图片，支持：<br/>• 图片URL (如: "https://example.com/image.jpg")<br/>• Base64数据 (如: "data:image/jpeg;base64,/9j/4AAQSkZJR...") |
 | `prompt` | string | ✅ | 风格描述，如"法国绘本风格"、"油画风格"等 |
 | `function` | string | ❌ | 固定为"stylization_all" |
 | `n` | number | ❌ | 生成图片数量，默认1 |
 | `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
-| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+| `dashScopeApiKey` | string | ✅ | DashScope API密钥，用于调用阿里云图像编辑API |
 
 ## 风格示例
 
@@ -41,19 +53,22 @@ imageedit({
 // 油画风格
 imageedit({
   imageUrl: "https://example.com/photo.jpg",
-  prompt: "转换成古典油画风格，厚重的笔触，丰富的色彩层次"
+  prompt: "转换成古典油画风格，厚重的笔触，丰富的色彩层次",
+  dashScopeApiKey: "your_api_key_here"
 })
 
 // 水彩画风格
 imageedit({
   imageUrl: "https://example.com/photo.jpg",
-  prompt: "转换成水彩画风格，柔和的色彩，透明的质感"
+  prompt: "转换成水彩画风格，柔和的色彩，透明的质感",
+  dashScopeApiKey: "your_api_key_here"
 })
 
 // 素描风格
 imageedit({
   imageUrl: "https://example.com/photo.jpg",
-  prompt: "转换成铅笔素描风格，黑白线条，细腻的阴影"
+  prompt: "转换成铅笔素描风格，黑白线条，细腻的阴影",
+  dashScopeApiKey: "your_api_key_here"
 })
 ```
 
@@ -62,19 +77,22 @@ imageedit({
 // 中国风
 imageedit({
   imageUrl: "https://example.com/photo.jpg",
-  prompt: "转换成中国传统水墨画风格，留白艺术，意境深远"
+  prompt: "转换成中国传统水墨画风格，留白艺术，意境深远",
+  dashScopeApiKey: "your_api_key_here"
 })
 
 // 日本动漫风格
 imageedit({
   imageUrl: "https://example.com/photo.jpg",
-  prompt: "转换成日式动漫风格，清新的色彩，可爱的画风"
+  prompt: "转换成日式动漫风格，清新的色彩，可爱的画风",
+  dashScopeApiKey: "your_api_key_here"
 })
 
 // 欧美插画风格
 imageedit({
   imageUrl: "https://example.com/photo.jpg",
-  prompt: "转换成欧美插画风格，现代简约，时尚感强"
+  prompt: "转换成欧美插画风格，现代简约，时尚感强",
+  dashScopeApiKey: "your_api_key_here"
 })
 ```
 
@@ -83,13 +101,15 @@ imageedit({
 // 复古风格
 imageedit({
   imageUrl: "https://example.com/photo.jpg",
-  prompt: "转换成80年代复古风格，怀旧的色调，复古的质感"
+  prompt: "转换成80年代复古风格，怀旧的色调，复古的质感",
+  dashScopeApiKey: "your_api_key_here"
 })
 
 // 未来科技风格
 imageedit({
   imageUrl: "https://example.com/photo.jpg",
-  prompt: "转换成未来科技风格，霓虹色彩，科幻感十足"
+  prompt: "转换成未来科技风格，霓虹色彩，科幻感十足",
+  dashScopeApiKey: "your_api_key_here"
 })
 ```
 

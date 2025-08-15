@@ -1,26 +1,5 @@
 import { z } from "zod";
-
-interface ImageEditResponse {
-    output: {
-        task_id: string;
-        task_status: string;
-    };
-    request_id: string;
-}
-
-// 支持的图像编辑功能类型
-type ImageEditFunction =
-    | "stylization_all"      // 整体风格化
-    | "stylization_local"    // 局部风格化
-    | "description_edit"     // 指令编辑
-    | "description_edit_with_mask" // 局部重绘
-    | "remove_watermark"     // 去文字水印
-    | "inpainting"           // 图像修复
-    | "expand"               // 扩图
-    | "super_resolution"     // 图像超分
-    | "colorization"         // 图像上色
-    | "doodle"               // 线稿生图
-    | "control_cartoon_feature"; // 卡通形象控制
+import { createImageEditCore, type ImageEditFunction } from "@/libs/imageEdit";
 
 export const makeImageEditHandler = (apiKey: string) => {
     return async ({
@@ -50,70 +29,55 @@ export const makeImageEditHandler = (apiKey: string) => {
         model?: string;
         dashScopeApiKey?: string;
     }) => {
-        const key = dashScopeApiKey || apiKey;
-
         try {
-            if (!key) {
-                return {
-                    content: [{
-                        type: "text" as const,
-                        text: "错误: 需要提供DASHSCOPE_API_KEY"
-                    }],
-                };
-            }
+            // 创建图像编辑核心实例
+            const imageEditCore = createImageEditCore(apiKey);
 
             // 构建请求参数
-            const requestBody = {
-                model: model || 'wanx2.1-imageedit',
-                input: {
-                    function: editFunction || 'stylization_all',
-                    prompt: prompt,
-                    base_image_url: imageUrl,
-                    ...(maskUrl && { mask_image_url: maskUrl })
-                },
-                parameters: {
-                    n: n || 1,
-                    ...(editFunction === 'expand' && {
-                        top_scale: topScale || 1.5,
-                        bottom_scale: bottomScale || 1.5,
-                        left_scale: leftScale || 1.5,
-                        right_scale: rightScale || 1.5
-                    }),
-                    ...(editFunction === 'super_resolution' && {
-                        upscale_factor: upscaleFactor || 2
-                    })
-                }
+            const request = {
+                imageUrl,
+                prompt,
+                function: editFunction,
+                maskUrl,
+                n,
+                topScale,
+                bottomScale,
+                leftScale,
+                rightScale,
+                upscaleFactor,
+                model,
+                dashScopeApiKey
             };
 
-            // 调用DashScope图像编辑API
-            const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/image2image/image-synthesis', {
-                method: 'POST',
-                headers: {
-                    'X-DashScope-Async': 'enable',
-                    'Authorization': `Bearer ${key}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestBody)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.json();
+            // 验证请求参数
+            const validation = imageEditCore.validateRequest(request);
+            if (!validation.valid) {
                 return {
                     content: [{
                         type: "text" as const,
-                        text: `API请求失败: ${(errorText as any).message || '未知错误'}`
+                        text: `参数验证失败: ${validation.errors.join(', ')}`
                     }],
                 };
             }
 
-            const data: ImageEditResponse = await response.json();
+            // 执行图像编辑任务
+            const result = await imageEditCore.editImage(request);
 
-            return {
-                content: [{
-                    type: "text" as const,
-                    text: `图像编辑任务已提交，任务ID: ${data.output.task_id}，请等待15秒（通过sleep命令）后查询任务状态`
-                }],
-            };
+            if (result.success) {
+                return {
+                    content: [{
+                        type: "text" as const,
+                        text: result.message
+                    }],
+                };
+            } else {
+                return {
+                    content: [{
+                        type: "text" as const,
+                        text: result.message
+                    }],
+                };
+            }
         } catch (error) {
             return {
                 content: [{
