@@ -5,6 +5,15 @@
   import TaskHistory from './TaskHistory.vue';
   import { XIcon } from '@/components/icons';
 
+  // 组件属性
+  interface Props {
+    defaultFunctionType?: string;
+  }
+
+  const props = withDefaults(defineProps<Props>(), {
+    defaultFunctionType: 'stylization_all',
+  });
+
   const {
     // 状态
     imageInputType,
@@ -35,14 +44,16 @@
 
     // 预设指令
     presetPrompts,
+    cartoonPresetPrompts,
     showPresetPrompts,
+    currentPresetPrompts,
 
     // 方法
     handleFileChange,
     submitEditTask,
     clearPrompt,
     selectPresetPrompt,
-  } = useImageEdit();
+  } = useImageEdit(props.defaultFunctionType);
 
   // 动态表单验证规则
   const getValidationRules = () => {
@@ -210,7 +221,7 @@
           @change="(e) => selectPresetPrompt((e.target as HTMLSelectElement).value)"
           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           <option
-            v-for="preset in presetPrompts"
+            v-for="preset in currentPresetPrompts"
             :key="preset.value"
             :value="preset.value">
             {{ preset.label }}

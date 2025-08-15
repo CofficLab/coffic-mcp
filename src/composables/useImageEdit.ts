@@ -13,7 +13,7 @@ export interface ImageEditTask {
     result?: string
 }
 
-export function useImageEdit() {
+export function useImageEdit(defaultFunctionType?: string) {
     // 使用功能类型管理
     const {
         selectedFunctionType,
@@ -31,7 +31,7 @@ export function useImageEdit() {
     const imageBase64 = ref('')
     const imageFile = ref<File | null>(null)
     const prompt = ref('')
-    const functionType = ref('stylization_all')
+    const functionType = ref(defaultFunctionType || 'stylization_all')
     const maskUrl = ref('')
     const topScale = ref(1.5)
     const bottomScale = ref(1.5)
@@ -61,8 +61,41 @@ export function useImageEdit() {
 
     // 计算属性：是否显示预设指令
     const showPresetPrompts = computed(() => {
-        return functionType.value === 'stylization_all'
+        return functionType.value === 'stylization_all' || functionType.value === 'control_cartoon_feature'
     })
+
+    // 计算属性：获取当前功能类型对应的预设指令
+    const currentPresetPrompts = computed(() => {
+        if (functionType.value === 'control_cartoon_feature') {
+            return cartoonPresetPrompts.value
+        }
+        return presetPrompts.value
+    })
+
+    // 卡通形象控制预设指令
+    const cartoonPresetPrompts = ref([
+        { label: '请选择预设指令', value: '' },
+        { label: '森林探险', value: '卡通形象在森林中探险，周围有高大的树木和神秘的光线，手持探险装备' },
+        { label: '海边夕阳', value: '卡通形象坐在海边，看着夕阳西下，海鸥在天空中飞翔，海风轻拂' },
+        { label: '厨房做蛋糕', value: '卡通形象在厨房里做蛋糕，穿着围裙，周围有各种食材和烘焙工具' },
+        { label: '开心笑容', value: '卡通形象露出开心的笑容，眼睛闪闪发光，周围有爱心和星星' },
+        { label: '跳舞场景', value: '卡通形象在跳舞，穿着漂亮的舞裙，周围有音符飘舞，舞台灯光闪耀' },
+        { label: '荡秋千', value: '卡通形象坐在秋千上，快乐地荡秋千，头发随风飘扬，背景是公园' },
+        { label: '超级英雄', value: '卡通形象穿着超级英雄的服装，披风飘扬，准备拯救世界，充满正义感' },
+        { label: '魔法师', value: '卡通形象戴着魔法帽，手持魔法杖，周围有魔法光芒和神秘符文' },
+        { label: '公主装扮', value: '卡通形象戴着皇冠，穿着公主裙，坐在宝座上，周围有华丽的装饰' },
+        { label: '童话城堡', value: '卡通形象在童话城堡中，周围有魔法生物，天空中有彩虹，充满梦幻色彩' },
+        { label: '洞穴探险', value: '卡通形象在神秘洞穴中探险，手持火把，周围有古老的壁画和神秘符号' },
+        { label: '图书馆看书', value: '卡通形象在图书馆里看书，坐在舒适的椅子上，周围有书架和温暖的灯光' },
+        { label: '太空冒险', value: '卡通形象在太空中冒险，穿着宇航服，周围有星星和行星，充满科幻感' },
+        { label: '海底世界', value: '卡通形象在海底世界，穿着潜水服，周围有珊瑚、鱼群和海底生物' },
+        { label: '雪山滑雪', value: '卡通形象在雪山上滑雪，穿着滑雪装备，周围有白雪皑皑的山峰' },
+        { label: '城市夜景', value: '卡通形象在城市夜景中，站在高楼顶端，周围有霓虹灯和繁华的街道' },
+        { label: '花园野餐', value: '卡通形象在美丽的花园中野餐，坐在草地上，周围有鲜花和蝴蝶' },
+        { label: '音乐演奏', value: '卡通形象在演奏乐器，穿着演出服装，周围有音符和舞台灯光' },
+        { label: '运动健身', value: '卡通形象在健身房运动，穿着运动服装，周围有健身器材和激励标语' },
+        { label: '学校课堂', value: '卡通形象在学校课堂上，坐在课桌前，周围有黑板、书本和学习用品' }
+    ])
     // 使用本地存储管理API密钥、编辑指令和任务历史
     const { storedValue: dashScopeApiKey } = useLocalStorage('dashScopeApiKey', '')
     const { storedValue: storedPrompt } = useLocalStorage('imageEditPrompt', '')
@@ -309,7 +342,9 @@ export function useImageEdit() {
 
         // 预设指令
         presetPrompts,
+        cartoonPresetPrompts,
         showPresetPrompts,
+        currentPresetPrompts,
 
         // 功能类型工具方法
         getFunctionTypeDisplayName,

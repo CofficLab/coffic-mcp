@@ -1,13 +1,10 @@
 <script setup lang="ts">
   import { useImageEdit, type ImageEditTask } from '@/composables/useImageEdit';
-  import { useTaskStatus } from '@/composables/useTaskStatus';
-  import { EyeIcon, TrashIcon, RefreshIcon } from '@/components/icons';
+  import { EyeIcon, TrashIcon } from '@/components/icons';
   import ImageDisplay from './ImageDisplay.vue';
 
   // 获取任务历史和功能类型工具方法
   const { taskHistory, getFunctionTypeDisplayName } = useImageEdit();
-  // 任务状态查询组合式
-  const { queryingStatus, getLastQueryTime, queryTaskStatus } = useTaskStatus();
 
   // 格式化时间
   const formatTime = (timestamp: number) => {
@@ -135,22 +132,15 @@
 
             <!-- 状态 -->
             <td>
-              <div class="space-y-1">
-                <div
-                  :class="`w-16 badge badge-sm ${
-                    task.status === 'pending'
-                      ? 'badge-warning'
-                      : task.status === 'completed'
-                      ? 'badge-success'
-                      : 'badge-error'
-                  }`">
-                  {{ getStatusDisplay(task.status).text }}
-                </div>
-                <div
-                  v-if="getLastQueryTime(task.id)"
-                  class="text-xs text-gray-500">
-                  最后查询: {{ getLastQueryTime(task.id) }}
-                </div>
+              <div
+                :class="`w-16 badge badge-sm ${
+                  task.status === 'pending'
+                    ? 'badge-warning'
+                    : task.status === 'completed'
+                    ? 'badge-success'
+                    : 'badge-error'
+                }`">
+                {{ getStatusDisplay(task.status).text }}
               </div>
             </td>
 
@@ -190,23 +180,6 @@
             <!-- 操作 -->
             <td class="text-center">
               <div class="flex gap-2 justify-center">
-                <!-- 查询状态按钮 -->
-                <button
-                  @click="queryTaskStatus(task)"
-                  :disabled="queryingStatus.has(task.id)"
-                  class="btn btn-ghost btn-xs"
-                  :class="{ loading: queryingStatus.has(task.id) }"
-                  :title="
-                    queryingStatus.has(task.id) ? '查询中...' : '查询状态'
-                  ">
-                  <RefreshIcon
-                    v-if="!queryingStatus.has(task.id)"
-                    class="w-4 h-4" />
-                  <span
-                    v-else
-                    class="loading loading-spinner loading-xs"></span>
-                </button>
-
                 <!-- 查看详情按钮 -->
                 <button
                   @click="viewTaskDetails(task)"
