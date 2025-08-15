@@ -39,6 +39,30 @@ export function useImageEdit() {
     const rightScale = ref(1.5)
     const upscaleFactor = ref(2)
     const n = ref(1)
+
+    // 预设编辑指令
+    const presetPrompts = ref([
+        { label: '请选择预设指令', value: '' },
+        { label: '油画风格', value: '将图片转换为油画风格，使用丰富的色彩和笔触效果' },
+        { label: '素描风格', value: '将图片转换为黑白素描风格，突出线条和明暗对比' },
+        { label: '卡通风格', value: '将图片转换为可爱的卡通风格，使用鲜艳的色彩和圆润的线条' },
+        { label: '水彩画风格', value: '将图片转换为水彩画风格，使用柔和的色彩和流动的笔触' },
+        { label: '复古风格', value: '将图片转换为复古风格，使用怀旧的色调和纹理' },
+        { label: '科幻风格', value: '将图片转换为科幻风格，使用未来感的色彩和光效' },
+        { label: '梦幻风格', value: '将图片转换为梦幻风格，使用柔和的色彩和梦幻的光影效果' },
+        { label: '黑白风格', value: '将图片转换为经典的黑白风格，突出对比度和层次感' },
+        { label: '极简风格', value: '将图片转换为极简风格，使用简洁的线条和纯净的色彩' },
+        { label: '抽象风格', value: '将图片转换为抽象风格，使用几何形状和抽象的色彩组合' },
+        { label: '写实风格', value: '将图片转换为超写实风格，增强细节和真实感' },
+        { label: '动漫风格', value: '将图片转换为日式动漫风格，使用动漫特有的色彩和线条' },
+        { label: '像素风格', value: '将图片转换为像素风格，使用复古的像素化效果' },
+        { label: '手绘风格', value: '将图片转换为手绘风格，模拟手工绘画的质感和笔触' }
+    ])
+
+    // 计算属性：是否显示预设指令
+    const showPresetPrompts = computed(() => {
+        return functionType.value === 'stylization_all'
+    })
     // 使用本地存储管理API密钥、编辑指令和任务历史
     const { storedValue: dashScopeApiKey } = useLocalStorage('dashScopeApiKey', '')
     const { storedValue: storedPrompt } = useLocalStorage('imageEditPrompt', '')
@@ -283,6 +307,10 @@ export function useImageEdit() {
         // 功能类型选项
         functionTypeOptions: getFunctionTypeOptions(),
 
+        // 预设指令
+        presetPrompts,
+        showPresetPrompts,
+
         // 功能类型工具方法
         getFunctionTypeDisplayName,
 
@@ -294,6 +322,14 @@ export function useImageEdit() {
         clearPrompt: () => {
             prompt.value = ''
             storedPrompt.value = ''
+        },
+
+        // 选择预设指令
+        selectPresetPrompt: (presetValue: string) => {
+            if (presetValue) {
+                prompt.value = presetValue
+                storedPrompt.value = presetValue
+            }
         },
 
         // 任务历史

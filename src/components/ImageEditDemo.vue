@@ -33,10 +33,15 @@
     // 功能类型选项
     functionTypeOptions,
 
+    // 预设指令
+    presetPrompts,
+    showPresetPrompts,
+
     // 方法
     handleFileChange,
     submitEditTask,
     clearPrompt,
+    selectPresetPrompt,
   } = useImageEdit();
 
   // 动态表单验证规则
@@ -177,6 +182,47 @@
 
       <div class="form-group">
         <label
+          for="function"
+          class="block text-sm font-medium text-gray-700 mb-2"
+          >功能类型:</label
+        >
+        <select
+          v-model="functionType"
+          id="function"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option
+            v-for="option in functionTypeOptions"
+            :key="option.value"
+            :value="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <div v-show="showPresetPrompts" class="form-group">
+        <label
+          for="presetPrompt"
+          class="block text-sm font-medium text-gray-700 mb-2">
+          预设指令:
+        </label>
+        <select
+          id="presetPrompt"
+          @change="(e) => selectPresetPrompt((e.target as HTMLSelectElement).value)"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option
+            v-for="preset in presetPrompts"
+            :key="preset.value"
+            :value="preset.value">
+            {{ preset.label }}
+          </option>
+        </select>
+        <small class="text-xs text-gray-500 mt-1 block">
+          选择预设指令可以快速填充编辑指令，也可以在此基础上进行修改。
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label
           for="prompt"
           class="block text-sm font-medium text-gray-700 mb-2">
           编辑指令:
@@ -204,25 +250,6 @@
         <small class="text-xs text-gray-500 mt-1 block">
           编辑指令会自动保存到浏览器本地存储中，下次访问时自动加载。
         </small>
-      </div>
-
-      <div class="form-group">
-        <label
-          for="function"
-          class="block text-sm font-medium text-gray-700 mb-2"
-          >功能类型:</label
-        >
-        <select
-          v-model="functionType"
-          id="function"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-          <option
-            v-for="option in functionTypeOptions"
-            :key="option.value"
-            :value="option.value">
-            {{ option.label }}
-          </option>
-        </select>
       </div>
 
       <div v-show="needsMask" class="form-group">
