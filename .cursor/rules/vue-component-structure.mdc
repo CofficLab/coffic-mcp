@@ -1,3 +1,7 @@
+---
+alwaysApply: true
+---
+
 # Vue 组件代码结构规范
 
 ## 代码顺序要求
@@ -15,6 +19,7 @@ Vue 组件的代码必须按照以下顺序排列：
 // 导入语句
 import { ref, computed } from 'vue'
 import { useImageEdit } from '@/composables/useImageEdit'
+import { EyeIcon, TrashIcon } from '@/assets/icons'
 
 // 组合式函数使用
 const { imageInputType, prompt, submitEditTask } = useImageEdit()
@@ -34,6 +39,10 @@ const handleSubmit = async () => {
 <template>
   <div class="container">
     <!-- 模板内容 -->
+    <button class="btn">
+      <EyeIcon class="w-4 h-4" />
+      查看详情
+    </button>
   </div>
 </template>
 
@@ -62,18 +71,50 @@ const handleSubmit = async () => {
 </style>
 ```
 
+## SVG 图标管理规范
+
+### 图标文件组织
+
+- **目录结构**：所有 SVG 图标放在 `src/components/icons/` 目录
+- **文件命名**：使用描述性的英文名称，如 `EyeIcon.vue`、`TrashIcon.vue`、`XIcon.vue`
+- **统一导出**：通过 `src/components/icons/index.ts` 统一管理图标导入
+
+### 图标使用方式
+
+```vue
+<!-- ✅ 正确：导入并使用图标组件 -->
+import { EyeIcon, TrashIcon } from '@/components/icons';
+
+<template>
+  <EyeIcon class="w-4 h-4" />
+  <TrashIcon class="w-4 h-4" />
+</template>
+
+<!-- ❌ 错误：内联 SVG 代码 -->
+<template>
+  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="..."></path>
+  </svg>
+</template>
+```
+
+### 图标组件属性
+
+- **尺寸控制**：使用 `class="w-4 h-4"` 等 Tailwind 类控制图标大小
+- **颜色继承**：SVG 使用 `stroke="currentColor"` 继承父元素颜色
+- **响应式设计**：图标大小应适配不同屏幕尺寸
+
 ## 原因说明
 
 - **可读性**：script 部分包含逻辑，放在上方便于快速理解组件功能
 - **维护性**：统一的代码结构便于团队协作和代码维护
 - **开发效率**：开发者可以快速定位到逻辑部分进行修改
+- **图标管理**：集中管理图标文件，避免重复代码，便于维护和更新
 
 ## 注意事项
 
 - 即使使用 `<script setup>` 语法，script 标签也必须放在最上方
 - 所有 Vue 组件文件都必须遵循此规则
 - 在重构现有组件时，请按照此规则调整代码顺序
-description:
-globs:
-alwaysApply: false
----
+- SVG 图标应通过 `@/components/icons` 导入，避免在组件中内联 SVG 代码
+- 图标组件应使用语义化的类名控制样式，保持与设计系统的一致性# Vue 组件代码结构规范

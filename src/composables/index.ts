@@ -8,6 +8,7 @@ export { useFunctionTypes } from './useFunctionTypes'
 
 // 导出组件
 export { default as TaskHistory } from '@/components/TaskHistory.vue'
+export { EyeIcon, TrashIcon, XIcon } from '@/components/icons'
 
 // 重新导出类型
 export type { ValidationRule, ValidationRules } from './useFormValidation'

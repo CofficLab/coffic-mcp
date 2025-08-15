@@ -103,6 +103,12 @@ export function useFunctionTypes() {
         label: type.label
     }))
 
+    // 根据值获取功能类型显示名称
+    const getFunctionTypeDisplayName = (value: string): string => {
+        const type = getFunctionTypeByValue(value)
+        return type?.label || value
+    }
+
     // 检查当前功能类型是否需要蒙版
     const needsMask = computed(() => selectedFunctionType.value?.needsMask || false)
 
@@ -137,6 +143,7 @@ export function useFunctionTypes() {
         getFunctionTypeByValue,
         getAllFunctionTypes,
         getFunctionTypeOptions,
+        getFunctionTypeDisplayName,
         setFunctionType
     }
 }

@@ -20,6 +20,7 @@ export function useImageEdit() {
         needsExpand,
         needsUpscale,
         getFunctionTypeOptions,
+        getFunctionTypeDisplayName,
         setFunctionType
     } = useFunctionTypes()
 
@@ -263,6 +264,9 @@ export function useImageEdit() {
 
         // 功能类型选项
         functionTypeOptions: getFunctionTypeOptions(),
+
+        // 功能类型工具方法
+        getFunctionTypeDisplayName,
 
         // 方法
         handleFileChange,

@@ -3,6 +3,7 @@
   import { useFormValidation } from '@/composables/useFormValidation';
   import { useUIState } from '@/composables/useUIState';
   import TaskHistory from './TaskHistory.vue';
+  import { XIcon } from '@/components/icons';
 
   const {
     // 状态
@@ -345,6 +346,7 @@
             @click="clearApiKey"
             class="px-3 py-2 text-sm text-red-600 border border-red-300 rounded-md hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200"
             title="清除API密钥">
+            <XIcon class="w-4 h-4 mr-1" />
             清除
           </button>
         </div>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { computed } from 'vue';
   import { useImageEdit, type ImageEditTask } from '@/composables/useImageEdit';
+  import { EyeIcon, TrashIcon } from '@/components/icons';
 
-  // 获取任务历史
-  const { taskHistory } = useImageEdit();
+  // 获取任务历史和功能类型工具方法
+  const { taskHistory, getFunctionTypeDisplayName } = useImageEdit();
 
   // 格式化时间
   const formatTime = (timestamp: number) => {
@@ -27,24 +27,6 @@
     return statusMap[status as keyof typeof statusMap] || statusMap.pending;
   };
 
-  // 获取功能类型显示名称
-  const getFunctionTypeName = (functionType: string) => {
-    const functionTypeMap: Record<string, string> = {
-      stylization_all: '整体风格化',
-      stylization_local: '局部风格化',
-      description_edit: '指令编辑',
-      description_edit_with_mask: '局部重绘',
-      inpainting: '图像修复',
-      remove_watermark: '去文字水印',
-      expand: '扩图',
-      super_resolution: '图像超分',
-      colorization: '图像上色',
-      doodle: '线稿生图',
-      control_cartoon_feature: '卡通形象控制',
-    };
-    return functionTypeMap[functionType] || functionType;
-  };
-
   // 清除所有任务历史
   const clearAllTasks = () => {
     if (confirm('确定要清除所有任务历史吗？此操作不可恢复。')) {
@@ -59,6 +41,19 @@
         (task: ImageEditTask) => task.id !== taskId
       );
     }
+  };
+
+  // 查看任务详情
+  const viewTaskDetails = (task: ImageEditTask) => {
+    alert(
+      `任务详情:\n\n任务ID: ${task.id}\n功能类型: ${getFunctionTypeDisplayName(
+        task.functionType
+      )}\n编辑指令: ${task.prompt}\n状态: ${
+        getStatusDisplay(task.status).text
+      }\n提交时间: ${formatTime(task.timestamp)}\n${
+        task.result ? `结果: ${task.result}` : ''
+      }`
+    );
   };
 </script>
 
@@ -87,64 +82,88 @@
       </div>
     </div>
 
-    <div v-else class="space-y-4">
-      <div
-        v-for="task in taskHistory"
-        :key="task.id"
-        class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors duration-200">
-        <div class="flex justify-between items-start mb-3">
-          <div class="flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <span
-                class="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
-                {{ task.id }}
-              </span>
-              <span
-                :class="`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                  getStatusDisplay(task.status).class
+    <div v-else class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <!-- 表头 -->
+        <thead>
+          <tr class="bg-base-200">
+            <th class="text-sm font-medium">任务ID</th>
+            <th class="text-sm font-medium">状态</th>
+            <th class="text-sm font-medium">功能类型</th>
+            <th class="text-sm font-medium">编辑指令</th>
+            <th class="text-sm font-medium">提交时间</th>
+            <th class="text-sm font-medium text-center">操作</th>
+          </tr>
+        </thead>
+
+        <!-- 表体 -->
+        <tbody>
+          <tr v-for="task in taskHistory" :key="task.id" class="hover">
+            <!-- 任务ID -->
+            <td class="font-mono text-xs bg-base-200 px-2 py-1 rounded">
+              {{ task.id }}
+            </td>
+
+            <!-- 状态 -->
+            <td>
+              <div
+                :class="`w-16 badge badge-sm ${
+                  task.status === 'pending'
+                    ? 'badge-warning'
+                    : task.status === 'completed'
+                    ? 'badge-success'
+                    : 'badge-error'
                 }`">
                 {{ getStatusDisplay(task.status).text }}
-              </span>
-            </div>
-            <div class="text-sm text-gray-500 mb-1">
-              功能类型: {{ getFunctionTypeName(task.functionType) }}
-            </div>
-            <div class="text-sm text-gray-500 mb-2">
-              提交时间: {{ formatTime(task.timestamp) }}
-            </div>
-          </div>
-          <button
-            @click="clearTask(task.id)"
-            class="text-red-500 hover:text-red-700 p-1 transition-colors duration-200"
-            title="删除任务记录">
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
+              </div>
+            </td>
 
-        <div class="bg-gray-50 rounded-md p-3 mb-3">
-          <div class="text-sm font-medium text-gray-700 mb-1">编辑指令:</div>
-          <div class="text-sm text-gray-600">{{ task.prompt }}</div>
-        </div>
+            <!-- 功能类型 -->
+            <td class="text-sm">
+              {{ getFunctionTypeDisplayName(task.functionType) }}
+            </td>
 
-        <div v-if="task.result" class="bg-blue-50 rounded-md p-3">
-          <div class="text-sm font-medium text-blue-700 mb-1">任务结果:</div>
-          <div class="text-sm text-blue-600">{{ task.result }}</div>
-        </div>
-      </div>
+            <!-- 编辑指令 -->
+            <td>
+              <div class="tooltip tooltip-left" :data-tip="task.prompt">
+                <span class="text-sm truncate block">
+                  {{
+                    task.prompt.length > 30
+                      ? task.prompt.substring(0, 30) + '...'
+                      : task.prompt
+                  }}
+                </span>
+              </div>
+            </td>
+
+            <!-- 提交时间 -->
+            <td class="text-sm text-gray-600">
+              {{ formatTime(task.timestamp) }}
+            </td>
+
+            <!-- 操作 -->
+            <td class="text-center">
+              <div class="flex gap-2 justify-center">
+                <!-- 查看详情按钮 -->
+                <button
+                  @click="viewTaskDetails(task)"
+                  class="btn btn-ghost btn-xs"
+                  title="查看详情">
+                  <EyeIcon class="w-4 h-4" />
+                </button>
+
+                <!-- 删除按钮 -->
+                <button
+                  @click="clearTask(task.id)"
+                  class="btn btn-ghost btn-error btn-xs"
+                  title="删除任务">
+                  <TrashIcon class="w-4 h-4" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
-
-<style scoped>
-  /* 组件特定样式 */
-</style>
