@@ -22,9 +22,12 @@
     "@coffic/cosy-content": "^0.2.25",
     "@coffic/cosy-ui": "^0.9.35",
     "@modelcontextprotocol/sdk": "1.17.1",
+    "@tailwindcss/vite": "^4.1.12",
+    "@vueuse/core": "^13.6.0",
     "agents": "^0.0.109",
     "astro": "^5.12.8",
     "sharp": "^0.34.3",
+    "tailwindcss": "^4.1.12",
     "vue": "^3.5.18",
     "zod": "^3.25.67"
   },

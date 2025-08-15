@@ -8,6 +8,9 @@ import vue from '@astrojs/vue';
 
 import cloudflare from '@astrojs/cloudflare';
 
+// @ts-ignore
+import tailwindcss from '@tailwindcss/vite';
+
 // https://astro.build/config
 export default defineConfig({
   i18n: {
@@ -30,6 +33,8 @@ export default defineConfig({
         '@': path.resolve('./src'),
       },
     },
+
+    plugins: [tailwindcss()],
   },
 
   integrations: [mdx(), vue()],

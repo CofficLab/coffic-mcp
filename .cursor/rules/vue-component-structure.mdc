@@ -1,0 +1,79 @@
+# Vue 组件代码结构规范
+
+## 代码顺序要求
+
+Vue 组件的代码必须按照以下顺序排列：
+
+1. **`<script>` 部分** - 必须放在最上方
+2. **`<template>` 部分** - 放在 script 下方
+3. **`<style>` 部分** - 放在最下方
+
+## 正确的结构示例
+
+```vue
+<script setup lang="ts">
+// 导入语句
+import { ref, computed } from 'vue'
+import { useImageEdit } from '@/composables/useImageEdit'
+
+// 组合式函数使用
+const { imageInputType, prompt, submitEditTask } = useImageEdit()
+
+// 响应式数据
+const isLoading = ref(false)
+
+// 计算属性
+const isFormValid = computed(() => prompt.value.length > 0)
+
+// 方法
+const handleSubmit = async () => {
+  // 处理逻辑
+}
+</script>
+
+<template>
+  <div class="container">
+    <!-- 模板内容 -->
+  </div>
+</template>
+
+<style scoped>
+/* 样式定义 */
+.container {
+  padding: 1rem;
+}
+</style>
+```
+
+## 错误的结构示例
+
+```vue
+<!-- ❌ 错误：template 在 script 之前 -->
+<template>
+  <div>内容</div>
+</template>
+
+<script setup lang="ts">
+// script 内容
+</script>
+
+<style scoped>
+/* 样式 */
+</style>
+```
+
+## 原因说明
+
+- **可读性**：script 部分包含逻辑，放在上方便于快速理解组件功能
+- **维护性**：统一的代码结构便于团队协作和代码维护
+- **开发效率**：开发者可以快速定位到逻辑部分进行修改
+
+## 注意事项
+
+- 即使使用 `<script setup>` 语法，script 标签也必须放在最上方
+- 所有 Vue 组件文件都必须遵循此规则
+- 在重构现有组件时，请按照此规则调整代码顺序
+description:
+globs:
+alwaysApply: false
+---

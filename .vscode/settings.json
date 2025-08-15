@@ -5,6 +5,8 @@
         "DASHSCOPE",
         "deeplink",
         "imageedit",
+        "inpainting",
+        "vueuse",
         "wanx"
     ]
 }
