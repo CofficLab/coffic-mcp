@@ -1,0 +1,137 @@
+---
+title: '局部风格化'
+description: '将图片的特定部分转换为指定风格，无需蒙版'
+folder: false
+order: 2
+---
+
+# 局部风格化
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+局部风格化功能可以将图片的特定部分转换为指定的艺术风格，而保持其他区域不变。这种功能特别适合需要突出特定元素的场景。
+
+## 功能描述
+
+局部风格化会智能识别图片中的特定对象或区域，只对这些区域应用风格转换，其他区域保持原样。无需提供蒙版，AI会自动识别目标区域。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "http://wanx.alicdn.com/material/20250318/stylization_local_1.png",
+  prompt: "把房子变成木板风格。",
+  function: "stylization_local"
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 需要编辑的图片URL |
+| `prompt` | string | ✅ | 局部风格描述，需要明确指出要改变的对象 |
+| `function` | string | ❌ | 固定为"stylization_local" |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 建筑风格转换
+```typescript
+// 将房子变成木板风格
+imageedit({
+  imageUrl: "https://example.com/house.jpg",
+  prompt: "把房子变成木板风格，保持其他元素不变"
+})
+
+// 将建筑变成现代玻璃风格
+imageedit({
+  imageUrl: "https://example.com/building.jpg",
+  prompt: "将建筑主体变成现代玻璃幕墙风格，天空和地面保持原样"
+})
+```
+
+### 物体风格转换
+```typescript
+// 将汽车变成卡通风格
+imageedit({
+  imageUrl: "https://example.com/car.jpg",
+  prompt: "将汽车变成可爱的卡通风格，背景保持写实"
+})
+
+// 将花朵变成水彩风格
+imageedit({
+  imageUrl: "https://example.com/flowers.jpg",
+  prompt: "将花朵变成水彩画风格，叶子和背景保持原样"
+})
+```
+
+### 人物风格转换
+```typescript
+// 将人物变成动漫风格
+imageedit({
+  imageUrl: "https://example.com/person.jpg",
+  prompt: "将人物变成日式动漫风格，服装和环境保持写实"
+})
+
+// 将面部变成油画风格
+imageedit({
+  imageUrl: "https://example.com/portrait.jpg",
+  prompt: "将面部变成古典油画风格，头发和背景保持原样"
+})
+```
+
+## 提示词技巧
+
+### 目标对象描述
+- **明确对象**：明确指出要改变的对象，如"房子"、"汽车"、"花朵"
+- **位置描述**：可以描述对象的位置，如"前景的花朵"、"中央的建筑"
+- **特征描述**：描述对象的特征，如"红色的房子"、"白色的汽车"
+
+### 风格描述
+- **风格类型**：木板、玻璃、卡通、水彩、油画等
+- **风格强度**：轻微、明显、强烈等
+- **保持元素**：明确说明要保持不变的元素
+
+### 效果控制
+```typescript
+// 轻微风格转换
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "将房子轻微地变成木板风格，保持原有的细节"
+})
+
+// 强烈风格转换
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "将房子强烈地转换成木板风格，突出木质感"
+})
+```
+
+## 注意事项
+
+1. **对象识别**：AI会自动识别目标对象，但复杂场景可能需要更精确的描述
+2. **边界处理**：风格转换会在对象边界处进行平滑过渡
+3. **保持一致性**：转换后的风格会与周围环境保持视觉协调
+4. **提示词精度**：提示词越精确，局部识别效果越好
+
+
+
+
+
+## 适用场景
+
+- **产品展示**：突出特定产品的风格
+- **建筑设计**：展示不同建筑风格的效果
+- **艺术创作**：在写实图片中融入艺术元素
+- **内容编辑**：为特定对象添加创意风格
+- **教学演示**：展示同一对象的不同风格表现
+
+## 最佳实践
+
+1. **明确目标**：在提示词中明确指出要改变的对象
+2. **描述风格**：详细描述期望的风格特征
+3. **控制范围**：通过描述限制风格转换的范围
+4. **保持协调**：确保转换后的风格与整体环境协调

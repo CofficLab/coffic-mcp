@@ -1,0 +1,165 @@
+---
+title: '去文字水印'
+description: '去除图片中的水印和文字'
+folder: false
+order: 6
+---
+
+# 去文字水印
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+去文字水印功能专门用于去除图片中的水印、文字、标记等不需要的内容。AI会自动识别文字和水印区域，然后智能填充合适的内容，保持图片的完整性和美观性。
+
+## 功能描述
+
+去文字水印功能利用AI的智能识别能力，自动检测图片中的文字和水印区域，然后根据周围环境生成合适的填充内容，实现无缝去除效果。这种功能特别适合清理商业图片、去除版权标记或恢复图片的原始状态。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "http://wanx.alicdn.com/material/20250318/remove_watermark_1.png",
+  prompt: "去除图像中的文字",
+  function: "remove_watermark"
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 需要处理的图片URL |
+| `prompt` | string | ✅ | 去除指令描述，说明要去除的内容类型 |
+| `function` | string | ❌ | 固定为"remove_watermark" |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 去除商业水印
+```typescript
+// 去除图片右下角的水印
+imageedit({
+  imageUrl: "https://example.com/watermarked_image.jpg",
+  prompt: "去除图片右下角的商业水印，保持画面的完整性"
+})
+
+// 去除图片中央的品牌标记
+imageedit({
+  imageUrl: "https://example.com/branded_image.jpg",
+  prompt: "去除图片中央的品牌标记，保持背景的自然过渡"
+})
+```
+
+### 去除文字内容
+```typescript
+// 去除图片上的说明文字
+imageedit({
+  imageUrl: "https://example.com/text_image.jpg",
+  prompt: "去除图片上的所有说明文字，保持画面的纯净"
+})
+
+// 去除图片上的日期标记
+imageedit({
+  imageUrl: "https://example.com/dated_image.jpg",
+  prompt: "去除图片上的日期标记，保持原有风格"
+})
+```
+
+### 去除版权标记
+```typescript
+// 去除版权信息
+imageedit({
+  imageUrl: "https://example.com/copyrighted_image.jpg",
+  prompt: "去除图片上的版权信息，保持画面的完整性"
+})
+
+// 去除作者签名
+imageedit({
+  imageUrl: "https://example.com/signed_image.jpg",
+  prompt: "去除图片上的作者签名，保持艺术品的原貌"
+})
+```
+
+### 去除其他标记
+```typescript
+// 去除二维码
+imageedit({
+  imageUrl: "https://example.com/qr_image.jpg",
+  prompt: "去除图片中的二维码，保持背景的自然"
+})
+
+// 去除条形码
+imageedit({
+  imageUrl: "https://example.com/barcode_image.jpg",
+  prompt: "去除图片中的条形码，保持包装的完整"
+})
+```
+
+## 提示词技巧
+
+### 去除内容描述
+- **具体描述**：明确指出要去除的内容类型，如"水印"、"文字"、"标记"等
+- **位置描述**：可以描述内容的位置，如"右下角"、"中央"、"左上角"等
+- **效果描述**：描述期望的效果，如"无缝去除"、"自然过渡"等
+
+### 保持元素描述
+- **背景保持**：说明要保持的背景元素，如"保持背景的自然"、"保持画面的完整性"
+- **风格保持**：说明要保持的风格，如"保持原有的艺术风格"、"保持画面的纯净"
+
+### 提示词结构
+```typescript
+// 标准去除提示词结构
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "去除[具体内容]，[位置描述]，[效果描述]，保持[要保持的元素]"
+})
+
+// 示例
+imageedit({
+  imageUrl: "https://example.com/landscape.jpg",
+  prompt: "去除图片右下角的水印，实现无缝去除，保持自然风景的纯净和完整性"
+})
+```
+
+## 注意事项
+
+1. **内容识别**：AI会自动识别文字和水印区域，但复杂背景可能需要更精确的描述
+2. **背景协调**：去除后的填充内容会与周围环境保持协调
+3. **效果自然**：确保去除后的效果自然，不会留下明显的痕迹
+4. **版权考虑**：在使用此功能时，请确保遵守相关的版权和使用条款
+
+
+
+
+
+## 适用场景
+
+- **商业用途**：去除商业图片中的水印和标记
+- **个人使用**：清理个人图片中的不需要的内容
+- **内容创作**：为创作项目准备干净的素材
+- **图片优化**：提升图片的视觉效果和可用性
+- **版权清理**：去除版权标记，恢复图片原貌
+
+## 最佳实践
+
+1. **描述清晰**：提供清晰的去除描述，说明要去除的内容类型
+2. **位置明确**：如果知道内容位置，可以在描述中指明
+3. **效果自然**：确保去除后的效果自然，不会影响图片的整体美观
+4. **版权合规**：在使用此功能时，确保遵守相关的版权和使用条款
+
+## 使用建议
+
+### 简单水印去除
+对于简单的水印和文字，直接使用此功能即可获得良好效果。
+
+### 复杂背景处理
+对于复杂背景中的水印，可能需要多次处理或结合其他功能。
+
+### 批量处理
+可以批量处理多张图片，提高工作效率。
+
+### 质量检查
+处理完成后，建议检查图片质量，确保去除效果满意。

@@ -1,0 +1,196 @@
+---
+title: '局部重绘'
+description: '根据文字描述和蒙版指定区域进行精确重绘'
+folder: false
+order: 4
+---
+
+# 局部重绘
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+局部重绘功能是图像编辑工具中最精确的编辑方式，通过提供蒙版图片来精确指定需要重绘的区域，然后根据文字描述进行内容重绘。
+
+## 功能描述
+
+局部重绘结合了蒙版的精确控制和AI的创意生成能力，可以在指定的区域内完全重新生成内容，同时保持与周围环境的自然融合。这种功能特别适合需要精确控制编辑区域的场景。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "http://wanx.alicdn.com/material/20250318/description_edit_with_mask_3.jpeg",
+  prompt: "陶瓷兔子拿着陶瓷小花。",
+  function: "description_edit_with_mask",
+  maskUrl: "http://wanx.alicdn.com/material/20250318/description_edit_with_mask_3_mask.png"
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 需要编辑的图片URL |
+| `prompt` | string | ✅ | 重绘内容描述，描述要在指定区域生成的内容 |
+| `function` | string | ❌ | 固定为"description_edit_with_mask" |
+| `maskUrl` | string | ✅ | 蒙版图片URL，白色区域表示要重绘的部分 |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 物体替换
+```typescript
+// 替换花瓶中的花朵
+imageedit({
+  imageUrl: "https://example.com/vase.jpg",
+  prompt: "在花瓶中放入一束白色的百合花，花瓣上有露珠",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/flowers_mask.png"
+})
+
+// 替换桌面上的物品
+imageedit({
+  imageUrl: "https://example.com/desk.jpg",
+  prompt: "在桌面上放置一台笔记本电脑，旁边放一杯咖啡",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/desk_items_mask.png"
+})
+```
+
+### 场景重绘
+```typescript
+// 重绘背景
+imageedit({
+  imageUrl: "https://example.com/portrait.jpg",
+  prompt: "将背景改为森林场景，有阳光透过树叶洒下",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/background_mask.png"
+})
+
+// 重绘前景
+imageedit({
+  imageUrl: "https://example.com/landscape.jpg",
+  prompt: "在前景添加一条小溪，溪水清澈见底，有鹅卵石",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/foreground_mask.png"
+})
+```
+
+### 人物编辑
+```typescript
+// 重绘服装
+imageedit({
+  imageUrl: "https://example.com/person.jpg",
+  prompt: "将人物穿着改为白色连衣裙，裙摆飘逸",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/clothing_mask.png"
+})
+
+// 重绘面部
+imageedit({
+  imageUrl: "https://example.com/face.jpg",
+  prompt: "将面部表情改为微笑，眼睛明亮有神",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/face_mask.png"
+})
+```
+
+### 建筑重绘
+```typescript
+// 重绘建筑外观
+imageedit({
+  imageUrl: "https://example.com/building.jpg",
+  prompt: "将建筑外墙改为红砖材质，增加古典风格",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/building_exterior_mask.png"
+})
+
+// 重绘建筑内部
+imageedit({
+  imageUrl: "https://example.com/interior.jpg",
+  prompt: "在房间内添加现代家具，简约风格，有落地窗",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/interior_mask.png"
+})
+```
+
+## 蒙版制作指南
+
+### 蒙版要求
+- **格式**：PNG格式，支持透明通道
+- **尺寸**：必须与原图尺寸完全一致
+- **颜色**：白色区域表示要重绘的部分，黑色区域保持不变
+- **精度**：蒙版边缘越精确，重绘效果越好
+
+### 蒙版制作工具
+- **Photoshop**：使用图层蒙版和画笔工具
+- **GIMP**：免费的开源图像编辑软件
+- **在线工具**：如remove.bg、pixlr.com等
+- **AI工具**：使用AI自动生成蒙版
+
+### 蒙版制作技巧
+```typescript
+// 蒙版制作步骤
+1. 打开原图
+2. 创建新图层作为蒙版
+3. 用白色画笔标记要重绘的区域
+4. 用黑色画笔标记要保持的区域
+5. 导出为PNG格式
+6. 确保蒙版尺寸与原图一致
+```
+
+## 提示词技巧
+
+### 内容描述
+- **具体描述**：详细描述要生成的内容，包括形状、颜色、材质等
+- **风格统一**：确保生成的内容与图片整体风格协调
+- **细节丰富**：添加细节描述，如"有露珠"、"阳光透过"等
+
+### 环境协调
+- **光照一致**：考虑原图的光照方向，确保新内容的光影一致
+- **色彩协调**：选择与原图色彩搭配的颜色
+- **透视正确**：确保新内容的透视与原图一致
+
+### 提示词结构
+```typescript
+// 标准提示词结构
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "在[位置]添加[具体内容]，[风格描述]，[细节描述]",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/mask.png"
+})
+
+// 示例
+imageedit({
+  imageUrl: "https://example.com/garden.jpg",
+  prompt: "在花坛中添加一丛红色的玫瑰，花瓣上有露珠，与周围的花朵风格一致",
+  function: "description_edit_with_mask",
+  maskUrl: "https://example.com/rose_mask.png"
+})
+```
+
+## 注意事项
+
+1. **蒙版精度**：蒙版边缘越精确，重绘效果越好
+2. **内容协调**：生成的内容必须与周围环境协调
+3. **风格一致**：确保新内容的风格与原图整体风格一致
+4. **光照匹配**：新内容的光影必须与原图的光照条件匹配
+
+## 适用场景
+
+- **产品设计**：在产品图片中添加或替换元素
+- **场景构建**：构建复杂的场景和背景
+- **内容创作**：为创意项目添加新元素
+- **图像修复**：修复图片中的缺陷或不需要的内容
+- **教学演示**：展示同一区域的不同内容变化
+
+## 最佳实践
+
+1. **蒙版精确**：制作精确的蒙版，确保边缘清晰
+2. **描述详细**：提供详细的内容描述，包括风格和细节
+3. **环境协调**：确保生成的内容与周围环境协调
+4. **风格一致**：保持与图片整体风格的一致性
+5. **光照匹配**：考虑光照条件，确保光影一致

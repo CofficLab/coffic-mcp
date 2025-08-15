@@ -1,0 +1,102 @@
+---
+title: '整体风格化'
+folder: false
+order: 1
+---
+
+# 整体风格化
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+
+## 🎯 功能描述
+
+整体风格化会改变整张图片的视觉风格，包括色彩、纹理、笔触等，但保持图片的基本内容和结构不变。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "转换成法国绘本风格",
+  function: "stylization_all"
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 需要编辑的图片URL |
+| `prompt` | string | ✅ | 风格描述，如"法国绘本风格"、"油画风格"等 |
+| `function` | string | ❌ | 固定为"stylization_all" |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 风格示例
+
+### 艺术风格
+```typescript
+// 油画风格
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "转换成古典油画风格，厚重的笔触，丰富的色彩层次"
+})
+
+// 水彩画风格
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "转换成水彩画风格，柔和的色彩，透明的质感"
+})
+
+// 素描风格
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "转换成铅笔素描风格，黑白线条，细腻的阴影"
+})
+```
+
+### 地域风格
+```typescript
+// 中国风
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "转换成中国传统水墨画风格，留白艺术，意境深远"
+})
+
+// 日本动漫风格
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "转换成日式动漫风格，清新的色彩，可爱的画风"
+})
+
+// 欧美插画风格
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "转换成欧美插画风格，现代简约，时尚感强"
+})
+```
+
+### 时代风格
+```typescript
+// 复古风格
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "转换成80年代复古风格，怀旧的色调，复古的质感"
+})
+
+// 未来科技风格
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "转换成未来科技风格，霓虹色彩，科幻感十足"
+})
+```
+
+## 功能演示
+
+下面是一个交互式的功能演示组件，你可以实际测试整体风格化功能：
+
+import ImageEditDemo from '@/components/ImageEditDemo.astro';
+
+<ImageEditDemo />

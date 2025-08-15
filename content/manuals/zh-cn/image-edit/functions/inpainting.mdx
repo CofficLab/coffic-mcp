@@ -1,0 +1,183 @@
+---
+title: '图像修复'
+description: '修复图片中的缺陷，需要提供蒙版'
+folder: false
+order: 5
+---
+
+# 图像修复
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+图像修复功能可以智能修复图片中的各种缺陷，如划痕、污渍、破损、不需要的物体等。通过提供蒙版来指定需要修复的区域，AI会自动分析周围环境并生成合适的修复内容。
+
+## 功能描述
+
+图像修复利用AI的上下文理解能力，分析缺陷区域周围的内容和纹理，然后生成与周围环境完全协调的修复内容。这种功能特别适合修复老照片、去除不需要的元素或修复图片中的损坏部分。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "https://example.com/damaged_image.jpg",
+  prompt: "修复图片中的划痕和污渍，保持原有的细节和风格",
+  function: "inpainting",
+  maskUrl: "https://example.com/damage_mask.png"
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 需要修复的图片URL |
+| `prompt` | string | ✅ | 修复指令描述，说明要修复的内容 |
+| `function` | string | ❌ | 固定为"inpainting" |
+| `maskUrl` | string | ✅ | 蒙版图片URL，白色区域表示需要修复的部分 |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 老照片修复
+```typescript
+// 修复老照片的划痕
+imageedit({
+  imageUrl: "https://example.com/old_photo.jpg",
+  prompt: "修复照片中的划痕和折痕，保持原有的历史感",
+  function: "inpainting",
+  maskUrl: "https://example.com/scratches_mask.png"
+})
+
+// 修复老照片的污渍
+imageedit({
+  imageUrl: "https://example.com/stained_photo.jpg",
+  prompt: "去除照片中的污渍和斑点，恢复原有的清晰度",
+  function: "inpainting",
+  maskUrl: "https://example.com/stains_mask.png"
+})
+```
+
+### 去除不需要的元素
+```typescript
+// 去除电线杆
+imageedit({
+  imageUrl: "https://example.com/landscape.jpg",
+  prompt: "去除画面中的电线杆和电线，保持自然风景的纯净",
+  function: "inpainting",
+  maskUrl: "https://example.com/power_lines_mask.png"
+})
+
+// 去除路人
+imageedit({
+  imageUrl: "https://example.com/street.jpg",
+  prompt: "去除画面中的路人，保持街道的整洁",
+  function: "inpainting",
+  maskUrl: "https://example.com/people_mask.png"
+})
+
+// 去除水印
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "去除图片中的水印和文字，保持画面的完整性",
+  function: "inpainting",
+  maskUrl: "https://example.com/watermark_mask.png"
+})
+```
+
+### 修复破损内容
+```typescript
+// 修复破损的墙壁
+imageedit({
+  imageUrl: "https://example.com/wall.jpg",
+  prompt: "修复墙壁上的破损和裂缝，保持原有的材质和纹理",
+  function: "inpainting",
+  maskUrl: "https://example.com/damage_mask.png"
+})
+
+// 修复破损的家具
+imageedit({
+  imageUrl: "https://example.com/furniture.jpg",
+  prompt: "修复家具上的划痕和破损，保持原有的木质纹理",
+  function: "inpainting",
+  maskUrl: "https://example.com/furniture_damage_mask.png"
+})
+```
+
+### 修复人物照片
+```typescript
+// 修复面部缺陷
+imageedit({
+  imageUrl: "https://example.com/portrait.jpg",
+  prompt: "修复面部的小缺陷，保持原有的特征和表情",
+  function: "inpainting",
+  maskUrl: "https://example.com/face_defects_mask.png"
+})
+
+// 修复服装破损
+imageedit({
+  imageUrl: "https://example.com/person.jpg",
+  prompt: "修复服装上的破损和污渍，保持原有的款式",
+  function: "inpainting",
+  maskUrl: "https://example.com/clothing_damage_mask.png"
+})
+```
+
+## 蒙版制作指南
+
+### 蒙版要求
+- **格式**：PNG格式，支持透明通道
+- **尺寸**：必须与原图尺寸完全一致
+- **颜色**：白色区域表示需要修复的部分，黑色区域保持不变
+- **精度**：蒙版边缘越精确，修复效果越好
+
+### 修复区域标记
+```typescript
+// 修复区域标记原则
+1. 只标记需要修复的区域，不要标记过大的范围
+2. 边缘要精确，避免包含不需要修复的内容
+3. 对于复杂的缺陷，可以分多次修复
+4. 确保蒙版区域与周围环境有足够的连接
+```
+
+### 蒙版制作工具
+- **Photoshop**：使用图层蒙版和画笔工具
+- **GIMP**：免费的开源图像编辑软件
+- **在线工具**：如remove.bg、pixlr.com等
+- **AI工具**：使用AI自动生成蒙版
+
+## 提示词技巧
+
+### 修复描述
+- **具体描述**：详细描述要修复的内容，如"划痕"、"污渍"、"破损"等
+- **保持元素**：明确说明要保持的元素，如"保持原有的纹理"、"保持原有的风格"
+- **效果描述**：描述期望的修复效果，如"自然修复"、"无缝连接"等
+
+### 修复策略
+```typescript
+// 修复策略选择
+1. 轻微修复：适用于小的划痕和污渍
+2. 内容重建：适用于较大的破损区域
+3. 纹理保持：适用于需要保持原有纹理的区域
+4. 风格一致：适用于需要与整体风格协调的区域
+```
+
+### 提示词结构
+```typescript
+// 标准修复提示词结构
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "修复[具体缺陷]，保持[要保持的元素]，[效果描述]",
+  function: "inpainting",
+  maskUrl: "https://example.com/mask.png"
+})
+
+// 示例
+imageedit({
+  imageUrl: "https://example.com/old_building.jpg",
+  prompt: "修复建筑外墙的破损和裂缝，保持原有的红砖材质和古典风格，修复后要自然无缝",
+  function: "inpainting",
+  maskUrl: "https://example.com/building_damage_mask.png"
+})
+```

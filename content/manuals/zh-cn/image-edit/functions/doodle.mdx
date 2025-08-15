@@ -1,0 +1,218 @@
+---
+title: '线稿生图'
+description: '将线稿或涂鸦转换为完整的图片'
+folder: false
+order: 10
+---
+
+# 线稿生图
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+线稿生图功能可以将简单的线稿、涂鸦或草图转换为完整、详细的图片。AI会智能理解线稿的内容和意图，然后生成与之匹配的完整图像，让创意想法快速变成现实。
+
+## 功能描述
+
+线稿生图利用AI的创意生成能力，分析线稿中的线条、形状和结构，理解用户的创作意图，然后生成与之匹配的完整图片。这种功能特别适合将创意草图快速转化为成品图像，为设计师、艺术家和创意工作者提供强大的创作工具。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "http://wanx.alicdn.com/material/20250318/doodle_1.png",
+  prompt: "北欧极简风格的客厅。",
+  function: "doodle"
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 线稿图片URL |
+| `prompt` | string | ✅ | 生成内容描述，说明要生成的完整图片内容 |
+| `function` | string | ❌ | 固定为"doodle" |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 室内设计线稿
+```typescript
+// 客厅设计线稿
+imageedit({
+  imageUrl: "https://example.com/living_room_sketch.jpg",
+  prompt: "北欧极简风格的客厅，白色墙面，木质家具，大窗户，自然光线充足",
+  function: "doodle"
+})
+
+// 卧室设计线稿
+imageedit({
+  imageUrl: "https://example.com/bedroom_sketch.jpg",
+  prompt: "现代简约风格的卧室，灰色调，舒适的大床，简约的床头柜，温馨的灯光",
+  function: "doodle"
+})
+
+// 厨房设计线稿
+imageedit({
+  imageUrl: "https://example.com/kitchen_sketch.jpg",
+  prompt: "开放式厨房，白色橱柜，大理石台面，现代电器，明亮的照明",
+  function: "doodle"
+})
+```
+
+### 建筑设计线稿
+```typescript
+// 房屋设计线稿
+imageedit({
+  imageUrl: "https://example.com/house_sketch.jpg",
+  prompt: "现代风格的独栋别墅，玻璃幕墙，平屋顶，周围有花园和游泳池",
+  function: "doodle"
+})
+
+// 建筑外观线稿
+imageedit({
+  imageUrl: "https://example.com/building_sketch.jpg",
+  prompt: "商业建筑，玻璃和钢结构，现代设计，有绿化带和广场",
+  function: "doodle"
+})
+
+// 室内空间线稿
+imageedit({
+  imageUrl: "https://example.com/space_sketch.jpg",
+  prompt: "开放式办公空间，现代家具，自然采光，绿色植物装饰",
+  function: "doodle"
+})
+```
+
+### 产品设计线稿
+```typescript
+// 家具设计线稿
+imageedit({
+  imageUrl: "https://example.com/furniture_sketch.jpg",
+  prompt: "现代简约风格的沙发，灰色面料，金属腿，舒适的设计",
+  function: "doodle"
+})
+
+// 产品概念线稿
+imageedit({
+  imageUrl: "https://example.com/product_sketch.jpg",
+  prompt: "智能手表，圆形表盘，金属表带，现代科技感，有显示屏",
+  function: "doodle"
+})
+
+// 包装设计线稿
+imageedit({
+  imageUrl: "https://example.com/package_sketch.jpg",
+  prompt: "化妆品包装，简约设计，白色主体，金色装饰，高端感",
+  function: "doodle"
+})
+```
+
+### 艺术创作线稿
+```typescript
+// 人物线稿
+imageedit({
+  imageUrl: "https://example.com/character_sketch.jpg",
+  prompt: "动漫风格的人物，年轻女性，长发，现代服装，可爱的表情",
+  function: "doodle"
+})
+
+// 动物线稿
+imageedit({
+  imageUrl: "https://example.com/animal_sketch.jpg",
+  prompt: "卡通风格的猫咪，橙色毛发，绿色眼睛，可爱的表情，坐姿",
+  function: "doodle"
+})
+
+// 风景线稿
+imageedit({
+  imageUrl: "https://example.com/landscape_sketch.jpg",
+  prompt: "童话风格的森林，高大的树木，小径，阳光透过树叶，神秘感",
+  function: "doodle"
+})
+```
+
+## 提示词技巧
+
+### 风格描述
+- **设计风格**：明确说明设计风格，如"北欧极简"、"现代简约"、"古典优雅"等
+- **色彩搭配**：描述主要的色彩搭配，如"白色墙面"、"灰色调"、"自然色彩"等
+- **材质选择**：说明使用的材质，如"木质家具"、"大理石台面"、"玻璃幕墙"等
+
+### 细节描述
+- **空间布局**：描述空间的布局和结构，如"开放式"、"大窗户"、"自然光线"等
+- **装饰元素**：说明装饰和细节，如"绿色植物"、"艺术品"、"温馨灯光"等
+- **氛围营造**：描述要营造的氛围，如"温馨"、"现代"、"高端"等
+
+### 线稿质量要求
+```typescript
+// 线稿质量建议
+1. 线条清晰：线稿的线条要清晰可辨
+2. 结构明确：主要结构要明确表达
+3. 比例合理：各部分的比例要合理
+4. 创意明确：创意想法要明确表达
+```
+
+### 提示词结构
+```typescript
+// 标准线稿生图提示词结构
+imageedit({
+  imageUrl: "https://example.com/sketch.jpg",
+  prompt: "[设计风格]的[空间类型]，[主要特征]，[色彩搭配]，[材质选择]，[氛围描述]",
+  function: "doodle"
+})
+
+// 示例
+imageedit({
+  imageUrl: "https://example.com/office_sketch.jpg",
+  prompt: "现代简约风格的办公空间，开放式布局，白色和灰色主调，玻璃隔断，自然采光充足，专业而舒适的氛围",
+  function: "doodle"
+})
+```
+
+## 注意事项
+
+1. **线稿清晰**：线稿越清晰，生成效果越好
+2. **描述详细**：提供详细的生成描述，确保AI理解需求
+3. **风格一致**：确保生成的风格与线稿意图一致
+4. **创意保护**：线稿是创意的载体，要保护好原始创意
+
+## 🔧 技术特点
+
+- **智能理解**：AI智能理解线稿内容和创作意图
+- **创意生成**：根据线稿生成完整、详细的图片
+- **风格匹配**：确保生成的风格与线稿意图匹配
+- **细节丰富**：生成的内容细节丰富，质量高
+
+
+
+## 适用场景
+
+- **设计创作**：将设计草图快速转化为成品图像
+- **概念验证**：快速验证创意概念的可视化效果
+- **客户展示**：为客户展示设计概念和效果
+- **创意开发**：在创意开发过程中快速生成视觉参考
+- **教学演示**：展示设计从线稿到成品的完整过程
+
+## 最佳实践
+
+1. **线稿清晰**：确保线稿线条清晰，结构明确
+2. **描述详细**：提供详细的生成描述，包括风格、色彩、材质等
+3. **创意明确**：确保线稿中的创意想法明确表达
+4. **风格一致**：确保生成的风格与线稿意图一致
+
+## 使用建议
+
+### 简单线稿
+对于简单的线稿，直接描述主要内容即可获得良好效果。
+
+### 复杂线稿
+对于复杂的线稿，可以提供更详细的描述，提高生成精度。
+
+### 风格选择
+根据线稿内容选择合适的风格描述，确保生成效果满意。
+
+### 创意保护
+保护好原始线稿，它们是创意的宝贵资产。

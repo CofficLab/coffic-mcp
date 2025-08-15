@@ -1,0 +1,133 @@
+---
+title: '卡通形象控制'
+description: '支持参考卡通形象生成图像'
+folder: false
+order: 11
+---
+
+# 卡通形象控制
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+## 功能描述
+
+卡通形象控制利用AI的深度理解能力，分析参考卡通形象的特征、风格和个性，然后根据用户的创意描述生成新的图像。这种功能特别适合为卡通角色创建新的场景、表情、动作或服装，让卡通形象更加生动和有趣。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "http://wanx.alicdn.com/material/20250318/control_cartoon_feature_1.png",
+  prompt: "卡通形象小心翼翼地探出头，窥视着房间内一颗璀璨的蓝色宝石。",
+  function: "control_cartoon_feature"
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 参考卡通形象图片URL |
+| `prompt` | string | ✅ | 生成内容描述，说明要生成的新场景或内容 |
+| `function` | string | ❌ | 固定为"control_cartoon_feature" |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 场景变化
+```typescript
+// 改变卡通形象的环境
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象在森林中探险，周围有高大的树木和神秘的光线",
+  function: "control_cartoon_feature"
+})
+
+// 改变卡通形象的位置
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象坐在海边，看着夕阳西下，海鸥在天空中飞翔",
+  function: "control_cartoon_feature"
+})
+
+// 改变卡通形象的活动
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象在厨房里做蛋糕，穿着围裙，周围有各种食材",
+  function: "control_cartoon_feature"
+})
+```
+
+### 表情和动作
+```typescript
+// 改变卡通形象的表情
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象露出开心的笑容，眼睛闪闪发光，周围有爱心",
+  function: "control_cartoon_feature"
+})
+
+// 改变卡通形象的动作
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象在跳舞，穿着漂亮的舞裙，周围有音符飘舞",
+  function: "control_cartoon_feature"
+})
+
+// 改变卡通形象的姿势
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象坐在秋千上，快乐地荡秋千，头发随风飘扬",
+  function: "control_cartoon_feature"
+})
+```
+
+### 服装和装扮
+```typescript
+// 改变卡通形象的服装
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象穿着超级英雄的服装，披风飘扬，准备拯救世界",
+  function: "control_cartoon_feature"
+})
+
+// 改变卡通形象的装扮
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象戴着魔法帽，手持魔法杖，周围有魔法光芒",
+  function: "control_cartoon_feature"
+})
+
+// 改变卡通形象的配饰
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象戴着皇冠，穿着公主裙，坐在宝座上",
+  function: "control_cartoon_feature"
+})
+```
+
+### 故事场景
+```typescript
+// 童话故事场景
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象在童话城堡中，周围有魔法生物，天空中有彩虹",
+  function: "control_cartoon_feature"
+})
+
+// 冒险故事场景
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象在神秘洞穴中探险，手持火把，周围有古老的壁画",
+  function: "control_cartoon_feature"
+})
+
+// 日常生活场景
+imageedit({
+  imageUrl: "https://example.com/cartoon_character.jpg",
+  prompt: "卡通形象在图书馆里看书，坐在舒适的椅子上，周围有书架",
+  function: "control_cartoon_feature"
+})
+```

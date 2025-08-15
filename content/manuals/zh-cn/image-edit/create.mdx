@@ -13,133 +13,26 @@ import { CodeExample } from '@coffic/cosy-ui';
 
 ## 🚀 支持的功能类型
 
-### 1. 整体风格化 (`stylization_all`)
-将整张图片转换为指定风格。
+### 基础编辑功能
+- **[整体风格化](./functions/stylization-all.mdx)** - 将整张图片转换为指定风格
+- **[局部风格化](./functions/stylization-local.mdx)** - 将图片的特定部分转换为指定风格
+- **[指令编辑](./functions/description-edit.mdx)** - 根据文字描述修改图片中的特定内容
 
-```typescript
-imageedit({
-  imageUrl: "https://example.com/image.jpg",
-  prompt: "转换成法国绘本风格",
-  function: "stylization_all"
-})
-```
+### 精确编辑功能
+- **[局部重绘](./functions/description-edit-with-mask.mdx)** - 根据文字描述和蒙版指定区域进行精确重绘
+- **[图像修复](./functions/inpainting.mdx)** - 修复图片中的缺陷，需要提供蒙版
 
-### 2. 局部风格化 (`stylization_local`)
-将图片的特定部分转换为指定风格，无需蒙版。
+### 特殊处理功能
+- **[去文字水印](./functions/remove-watermark.mdx)** - 去除图片中的水印和文字
+- **[图像上色](./functions/colorization.mdx)** - 为黑白图片添加颜色
 
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/stylization_local_1.png",
-  prompt: "把房子变成木板风格。",
-  function: "stylization_local"
-})
-```
+### 图像增强功能
+- **[扩图](./functions/expand.mdx)** - 向四个方向扩展图片，支持自定义缩放比例
+- **[图像超分](./functions/super-resolution.mdx)** - 提高图片分辨率，支持自定义放大倍数
 
-### 3. 指令编辑 (`description_edit`)
-根据文字描述修改图片中的特定内容，无需蒙版。
-
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/description_edit_2.png",
-  prompt: "把女孩的头发修改为红色。",
-  function: "description_edit"
-})
-```
-
-### 4. 局部重绘 (`description_edit_with_mask`)
-根据文字描述和蒙版指定区域进行精确重绘。
-
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/description_edit_with_mask_3.jpeg",
-  prompt: "陶瓷兔子拿着陶瓷小花。",
-  function: "description_edit_with_mask",
-  maskUrl: "http://wanx.alicdn.com/material/20250318/description_edit_with_mask_3_mask.png"
-})
-```
-
-### 5. 去文字水印 (`remove_watermark`)
-去除图片中的水印和文字。
-
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/remove_watermark_1.png",
-  prompt: "去除图像中的文字",
-  function: "remove_watermark"
-})
-```
-
-### 6. 图像修复 (`inpainting`)
-修复图片中的缺陷，需要提供蒙版。
-
-```typescript
-imageedit({
-  imageUrl: "https://example.com/damaged_image.jpg",
-  prompt: "修复图片中的划痕和污渍",
-  function: "inpainting",
-  maskUrl: "https://example.com/damage_mask.jpg"
-})
-```
-
-### 7. 扩图 (`expand`)
-向四个方向扩展图片，支持自定义缩放比例。
-
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/expand_2.jpg",
-  prompt: "一位绿色仙子",
-  function: "expand",
-  topScale: 1.5,
-  bottomScale: 1.5,
-  leftScale: 1.5,
-  rightScale: 1.5
-})
-```
-
-### 8. 图像超分 (`super_resolution`)
-提高图片分辨率，支持自定义放大倍数。
-
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/super_resolution_1.jpeg",
-  prompt: "图像超分。",
-  function: "super_resolution",
-  upscaleFactor: 2
-})
-```
-
-### 9. 图像上色 (`colorization`)
-为黑白图片添加颜色，根据提示词描述上色。
-
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/colorization_1.jpeg",
-  prompt: "蓝色背景，黄色的叶子。",
-  function: "colorization"
-})
-```
-
-### 10. 线稿生图 (`doodle`)
-将线稿或涂鸦转换为完整的图片。
-
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/doodle_1.png",
-  prompt: "北欧极简风格的客厅。",
-  function: "doodle"
-})
-```
-
-### 11. 卡通形象控制 (`control_cartoon_feature`)
-支持参考卡通形象生成图像。
-
-```typescript
-imageedit({
-  imageUrl: "http://wanx.alicdn.com/material/20250318/control_cartoon_feature_1.png",
-  prompt: "卡通形象小心翼翼地探出头，窥视着房间内一颗璀璨的蓝色宝石。",
-  function: "control_cartoon_feature"
-})
-```
+### 创意生成功能
+- **[线稿生图](./functions/doodle.mdx)** - 将线稿或涂鸦转换为完整的图片
+- **[卡通形象控制](./functions/control-cartoon-feature.mdx)** - 支持参考卡通形象生成图像
 
 ## 📋 参数说明
 
@@ -155,7 +48,7 @@ imageedit({
 | `leftScale` | number | ❌ | 向左扩展的缩放比例，扩图功能使用，默认1.5 |
 | `rightScale` | number | ❌ | 向右扩展的缩放比例，扩图功能使用，默认1.5 |
 | `upscaleFactor` | number | ❌ | 图像超分的放大倍数，超分功能使用，默认2 |
-| `model` | string | ❌ | 使用的图像编辑模型 |
+| `model` | string | ❌ | 使用的图像编辑模型，使用imageedit_models工具查询支持的模型 |
 | `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
 
 ## 🔍 蒙版需求说明
@@ -187,3 +80,13 @@ imageedit({
 ## 🔧 技术实现
 
 所有功能都基于DashScope API实现，支持异步任务处理，确保长时间运行的编辑任务能够正常完成。工具集完全集成到MCP系统中，支持类型安全的参数验证和错误处理。
+
+## 📚 详细功能文档
+
+每个功能都有详细的文档说明，包括：
+- 功能描述和用途
+- 详细的使用示例
+- 提示词技巧和最佳实践
+- 适用场景和注意事项
+
+点击上方功能列表中的链接查看详细文档。

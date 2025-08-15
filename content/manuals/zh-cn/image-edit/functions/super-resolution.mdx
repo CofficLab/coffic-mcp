@@ -1,0 +1,203 @@
+---
+title: '图像超分'
+description: '提高图片分辨率，支持自定义放大倍数'
+folder: false
+order: 9
+---
+
+# 图像超分
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+图像超分功能可以显著提高图片的分辨率和清晰度，让低分辨率的图片变得更加清晰和详细。AI会智能分析图片内容，生成高质量的放大版本，保持原有的细节和风格。
+
+## 功能描述
+
+图像超分利用AI的深度学习能力，分析低分辨率图片的像素信息和纹理特征，然后生成高分辨率的版本。与传统的简单放大不同，AI超分能够智能地"想象"和重建缺失的细节，让图片看起来更加清晰和自然。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "http://wanx.alicdn.com/material/20250318/super_resolution_1.jpeg",
+  prompt: "图像超分。",
+  function: "super_resolution",
+  upscaleFactor: 2
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 需要超分的图片URL |
+| `prompt` | string | ✅ | 超分指令描述，说明超分的要求 |
+| `function` | string | ❌ | 固定为"super_resolution" |
+| `upscaleFactor` | number | ❌ | 图像超分的放大倍数，默认2 |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 照片超分
+```typescript
+// 2倍超分照片
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "提高照片分辨率，保持原有的清晰度和细节",
+  function: "super_resolution",
+  upscaleFactor: 2
+})
+
+// 4倍超分照片
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "大幅提高照片分辨率，增强细节表现",
+  function: "super_resolution",
+  upscaleFactor: 4
+})
+```
+
+### 艺术作品超分
+```typescript
+// 超分素描作品
+imageedit({
+  imageUrl: "https://example.com/sketch.jpg",
+  prompt: "提高素描分辨率，保持线条的清晰和艺术感",
+  function: "super_resolution",
+  upscaleFactor: 2
+})
+
+// 超分油画作品
+imageedit({
+  imageUrl: "https://example.com/painting.jpg",
+  prompt: "提高油画分辨率，增强笔触和色彩的细节",
+  function: "super_resolution",
+  upscaleFactor: 3
+})
+```
+
+### 文档图片超分
+```typescript
+// 超分文档图片
+imageedit({
+  imageUrl: "https://example.com/document.jpg",
+  prompt: "提高文档图片分辨率，确保文字清晰可读",
+  function: "super_resolution",
+  upscaleFactor: 2
+})
+
+// 超分图表图片
+imageedit({
+  imageUrl: "https://example.com/chart.jpg",
+  prompt: "提高图表分辨率，保持数据的清晰度",
+  function: "super_resolution",
+  upscaleFactor: 2
+})
+```
+
+### 产品图片超分
+```typescript
+// 超分产品图片
+imageedit({
+  imageUrl: "https://example.com/product.jpg",
+  prompt: "提高产品图片分辨率，增强产品细节表现",
+  function: "super_resolution",
+  upscaleFactor: 2
+})
+
+// 超分建筑图片
+imageedit({
+  imageUrl: "https://example.com/building.jpg",
+  prompt: "提高建筑图片分辨率，保持建筑细节和纹理",
+  function: "super_resolution",
+  upscaleFactor: 3
+})
+```
+
+## 提示词技巧
+
+### 超分要求描述
+- **清晰度要求**：说明对清晰度的要求，如"保持原有的清晰度"、"增强细节表现"等
+- **细节保持**：说明要保持的细节，如"保持线条清晰"、"保持纹理细节"等
+- **风格保持**：说明要保持的风格，如"保持艺术感"、"保持写实风格"等
+
+### 放大倍数选择
+- **2倍超分**：适合一般需求，效果明显且处理快速
+- **3倍超分**：适合需要更高清晰度的场景
+- **4倍超分**：适合需要大幅提升的场景，但处理时间较长
+
+### 应用场景描述
+```typescript
+// 常见应用场景
+1. 照片打印：提高照片分辨率用于大尺寸打印
+2. 屏幕显示：提高图片分辨率用于高分辨率屏幕
+3. 印刷出版：提高图片分辨率用于印刷出版
+4. 细节分析：提高图片分辨率用于细节分析
+5. 艺术创作：提高艺术作品分辨率用于展示
+```
+
+### 提示词结构
+```typescript
+// 标准超分提示词结构
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "提高[图片类型]分辨率，[清晰度要求]，[细节保持]，[风格保持]",
+  function: "super_resolution",
+  upscaleFactor: [倍数]
+})
+
+// 示例
+imageedit({
+  imageUrl: "https://example.com/portrait.jpg",
+  prompt: "提高肖像照片分辨率，保持原有的清晰度和细节，增强面部特征表现，保持写实风格",
+  function: "super_resolution",
+  upscaleFactor: 2
+})
+```
+
+## 注意事项
+
+1. **原图质量**：原图质量越高，超分效果越好
+2. **放大倍数**：放大倍数越大，处理时间越长
+3. **细节保持**：超分会保持原有细节，但不会创造不存在的细节
+4. **文件大小**：超分后的图片文件会显著增大
+
+## 🔧 技术特点
+
+- **智能超分**：AI智能分析图片内容，生成高质量放大版本
+- **细节保持**：保持原有的细节和纹理特征
+- **风格一致**：确保超分后的风格与原图一致
+- **倍数可调**：支持2-4倍的放大倍数选择
+
+
+
+## 适用场景
+
+- **照片打印**：提高照片分辨率用于大尺寸打印
+- **屏幕显示**：提高图片分辨率用于高分辨率屏幕
+- **印刷出版**：提高图片分辨率用于印刷出版
+- **细节分析**：提高图片分辨率用于细节分析
+- **艺术展示**：提高艺术作品分辨率用于展示
+
+## 最佳实践
+
+1. **原图选择**：选择质量较好的原图进行超分
+2. **倍数合理**：根据实际需求选择合适的放大倍数
+3. **描述清晰**：提供清晰的超分要求描述
+4. **效果检查**：超分完成后检查效果，确保满意
+
+## 使用建议
+
+### 一般用途
+对于一般用途，2倍超分通常已经足够，效果明显且处理快速。
+
+### 专业用途
+对于专业用途，如印刷出版，可以考虑3-4倍超分。
+
+### 批量处理
+可以批量处理多张图片，提高工作效率。
+
+### 质量对比
+建议对比超分前后的效果，确保超分质量满意。

@@ -1,0 +1,397 @@
+---
+import { Button, Heading } from '@coffic/cosy-ui';
+
+// 通用图像编辑演示组件
+// 支持所有图像编辑功能类型
+---
+
+<div class="image-edit-demo">
+  <Heading level={3}>功能演示</Heading>
+
+  <div class="demo-form">
+    <div class="form-group">
+      <label for="imageUrl">图片URL:</label>
+      <input type="text" id="imageUrl" placeholder="请输入图片URL" />
+    </div>
+
+    <div class="form-group">
+      <label for="prompt">编辑指令:</label>
+      <textarea id="prompt" placeholder="请输入编辑指令描述" rows="3"
+      ></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="function">功能类型:</label>
+      <select id="function">
+        <option value="stylization_all">整体风格化</option>
+        <option value="stylization_local">局部风格化</option>
+        <option value="description_edit">指令编辑</option>
+        <option value="description_edit_with_mask">局部重绘</option>
+        <option value="inpainting">图像修复</option>
+        <option value="remove_watermark">去文字水印</option>
+        <option value="colorization">图像上色</option>
+        <option value="expand">扩图</option>
+        <option value="super_resolution">图像超分</option>
+        <option value="doodle">线稿生图</option>
+        <option value="control_cartoon_feature">卡通形象控制</option>
+      </select>
+    </div>
+
+    <div class="form-group" id="maskUrlGroup" style="display: none;">
+      <label for="maskUrl">蒙版URL:</label>
+      <input type="text" id="maskUrl" placeholder="请输入蒙版图片URL" />
+    </div>
+
+    <div class="form-group" id="expandParams" style="display: none;">
+      <label>扩展参数:</label>
+      <div class="expand-inputs">
+        <input
+          type="number"
+          id="topScale"
+          placeholder="上扩展"
+          step="0.1"
+          min="0.5"
+          max="3.0"
+        />
+        <input
+          type="number"
+          id="bottomScale"
+          placeholder="下扩展"
+          step="0.1"
+          min="0.5"
+          max="3.0"
+        />
+        <input
+          type="number"
+          id="leftScale"
+          placeholder="左扩展"
+          step="0.1"
+          min="0.5"
+          max="3.0"
+        />
+        <input
+          type="number"
+          id="rightScale"
+          placeholder="右扩展"
+          step="0.1"
+          min="0.5"
+          max="3.0"
+        />
+      </div>
+    </div>
+
+    <div class="form-group" id="upscaleParams" style="display: none;">
+      <label for="upscaleFactor">超分倍数:</label>
+      <input type="number" id="upscaleFactor" placeholder="2" min="2" max="4" />
+    </div>
+
+    <div class="form-group">
+      <label for="n">生成数量:</label>
+      <input type="number" id="n" value="1" min="1" max="4" />
+    </div>
+
+    <Button id="submitBtn">提交编辑任务</Button>
+  </div>
+
+  <div class="demo-result" id="demoResult" style="display: none;">
+    <h4>任务结果</h4>
+    <div id="taskId" class="task-info"></div>
+    <div id="statusInfo" class="status-info"></div>
+    <div id="resultImages" class="result-images"></div>
+  </div>
+</div>
+
+<script>
+  // 功能类型配置
+  const functionConfigs = {
+    stylization_all: {
+      name: '整体风格化',
+      needsMask: false,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+    stylization_local: {
+      name: '局部风格化',
+      needsMask: false,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+    description_edit: {
+      name: '指令编辑',
+      needsMask: false,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+    description_edit_with_mask: {
+      name: '局部重绘',
+      needsMask: true,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+    inpainting: {
+      name: '图像修复',
+      needsMask: true,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+    remove_watermark: {
+      name: '去文字水印',
+      needsMask: false,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+    colorization: {
+      name: '图像上色',
+      needsMask: false,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+    expand: {
+      name: '扩图',
+      needsMask: false,
+      needsExpand: true,
+      needsUpscale: false,
+    },
+    super_resolution: {
+      name: '图像超分',
+      needsMask: false,
+      needsExpand: false,
+      needsUpscale: true,
+    },
+    doodle: {
+      name: '线稿生图',
+      needsMask: false,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+    control_cartoon_feature: {
+      name: '卡通形象控制',
+      needsMask: false,
+      needsExpand: false,
+      needsUpscale: false,
+    },
+  };
+
+  // 监听功能类型变化
+  document.getElementById('function')?.addEventListener('change', (e) => {
+    const target = e.target as HTMLSelectElement;
+    const selectedFunction = target.value;
+    const config =
+      functionConfigs[selectedFunction as keyof typeof functionConfigs];
+
+    // 显示/隐藏蒙版输入
+    const maskGroup = document.getElementById('maskUrlGroup');
+    if (maskGroup) {
+      maskGroup.style.display = config.needsMask ? 'block' : 'none';
+    }
+
+    // 显示/隐藏扩展参数
+    const expandParams = document.getElementById('expandParams');
+    if (expandParams) {
+      expandParams.style.display = config.needsExpand ? 'block' : 'none';
+    }
+
+    // 显示/隐藏超分参数
+    const upscaleParams = document.getElementById('upscaleParams');
+    if (upscaleParams) {
+      upscaleParams.style.display = config.needsUpscale ? 'block' : 'none';
+    }
+  });
+
+  // 提交编辑任务
+  document.getElementById('submitBtn')?.addEventListener('click', async () => {
+    const imageUrl = (document.getElementById('imageUrl') as HTMLInputElement)
+      ?.value;
+    const prompt = (document.getElementById('prompt') as HTMLTextAreaElement)
+      ?.value;
+    const functionType = (
+      document.getElementById('function') as HTMLSelectElement | null
+    )?.value;
+    const maskUrl = (document.getElementById('maskUrl') as HTMLInputElement)
+      ?.value;
+    const topScale = (document.getElementById('topScale') as HTMLInputElement)
+      ?.value;
+    const bottomScale = (
+      document.getElementById('bottomScale') as HTMLInputElement
+    )?.value;
+    const leftScale = (document.getElementById('leftScale') as HTMLInputElement)
+      ?.value;
+    const rightScale = (
+      document.getElementById('rightScale') as HTMLInputElement
+    )?.value;
+    const upscaleFactor = (
+      document.getElementById('upscaleFactor') as HTMLInputElement
+    )?.value;
+    const n = (document.getElementById('n') as HTMLInputElement)?.value;
+
+    if (!imageUrl || !prompt) {
+      alert('请填写图片URL和编辑指令');
+      return;
+    }
+
+    // 构建请求参数
+    const params: any = {
+      imageUrl,
+      prompt,
+      function: functionType,
+      n: parseInt(n) || 1,
+    };
+
+    // 添加蒙版参数
+    if (
+      functionConfigs[functionType as keyof typeof functionConfigs].needsMask &&
+      maskUrl
+    ) {
+      params.maskUrl = maskUrl;
+    }
+
+    // 添加扩展参数
+    if (
+      functionConfigs[functionType as keyof typeof functionConfigs].needsExpand
+    ) {
+      params.topScale = parseFloat(topScale) || 1.5;
+      params.bottomScale = parseFloat(bottomScale) || 1.5;
+      params.leftScale = parseFloat(leftScale) || 1.5;
+      params.rightScale = parseFloat(rightScale) || 1.5;
+    }
+
+    // 添加超分参数
+    if (
+      functionConfigs[functionType as keyof typeof functionConfigs].needsUpscale
+    ) {
+      params.upscaleFactor = parseInt(upscaleFactor) || 2;
+    }
+
+    try {
+      // 这里应该调用实际的API
+      // 目前只是模拟响应
+      const response = await simulateImageEdit(params);
+      displayResult(response);
+    } catch (error) {
+      console.error('编辑任务提交失败:', error);
+      alert('编辑任务提交失败，请重试');
+    }
+  });
+
+  // 模拟图像编辑API调用
+  async function simulateImageEdit(params: any) {
+    // 模拟API延迟
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    return {
+      taskId: `task_${Date.now()}`,
+      status: 'pending',
+      message: '任务已提交，正在处理中...',
+    };
+  }
+
+  // 显示结果
+  function displayResult(response: any) {
+    const resultDiv = document.getElementById('demoResult');
+    const taskIdDiv = document.getElementById('taskId');
+    const statusInfoDiv = document.getElementById('statusInfo');
+
+    if (resultDiv && taskIdDiv && statusInfoDiv) {
+      resultDiv.style.display = 'block';
+      taskIdDiv.innerHTML = `<strong>任务ID:</strong> ${response.taskId}`;
+      statusInfoDiv.innerHTML = `<strong>状态:</strong> ${response.message}`;
+    }
+  }
+</script>
+
+<style>
+  .image-edit-demo {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+
+  .demo-form {
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .expand-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .submit-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  .submit-btn:hover {
+    background: #0056b3;
+  }
+
+  .demo-result {
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+
+  .task-info {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #e3f2fd;
+    border-radius: 4px;
+  }
+
+  .status-info {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #fff3e0;
+    border-radius: 4px;
+  }
+
+  .result-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+
+  .result-images img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+  }
+</style>

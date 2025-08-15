@@ -1,0 +1,176 @@
+---
+title: '指令编辑'
+description: '根据文字描述修改图片中的特定内容，无需蒙版'
+folder: false
+order: 3
+---
+
+# 指令编辑
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+指令编辑功能可以根据文字描述智能修改图片中的特定内容，无需提供蒙版。AI会自动识别需要修改的对象并进行相应的编辑。
+
+## 功能描述
+
+指令编辑通过自然语言描述来指导AI修改图片中的特定内容，比如改变颜色、形状、材质等。AI会智能理解指令并只修改相关的部分，保持其他区域不变。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "http://wanx.alicdn.com/material/20250318/description_edit_2.png",
+  prompt: "把女孩的头发修改为红色。",
+  function: "description_edit"
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 需要编辑的图片URL |
+| `prompt` | string | ✅ | 编辑指令描述，需要明确指出要修改的内容 |
+| `function` | string | ❌ | 固定为"description_edit" |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 颜色修改
+```typescript
+// 修改头发颜色
+imageedit({
+  imageUrl: "https://example.com/portrait.jpg",
+  prompt: "把女孩的头发修改为红色，保持其他特征不变"
+})
+
+// 修改服装颜色
+imageedit({
+  imageUrl: "https://example.com/person.jpg",
+  prompt: "将人物的上衣改为蓝色，裤子改为黑色"
+})
+
+// 修改花朵颜色
+imageedit({
+  imageUrl: "https://example.com/flowers.jpg",
+  prompt: "将红色的花朵改为粉色，绿色的叶子改为深绿色"
+})
+```
+
+### 材质修改
+```typescript
+// 修改建筑材质
+imageedit({
+  imageUrl: "https://example.com/building.jpg",
+  prompt: "将砖墙改为玻璃幕墙，保持建筑结构不变"
+})
+
+// 修改服装材质
+imageedit({
+  imageUrl: "https://example.com/clothing.jpg",
+  prompt: "将棉质T恤改为丝绸材质，增加光泽感"
+})
+
+// 修改家具材质
+imageedit({
+  imageUrl: "https://example.com/furniture.jpg",
+  prompt: "将木制桌子改为大理石材质，保持原有的设计风格"
+})
+```
+
+### 形状修改
+```typescript
+// 修改发型
+imageedit({
+  imageUrl: "https://example.com/portrait.jpg",
+  prompt: "将直发改为卷发，增加蓬松感"
+})
+
+// 修改建筑形状
+imageedit({
+  imageUrl: "https://example.com/house.jpg",
+  prompt: "将平屋顶改为尖顶，增加阁楼窗户"
+})
+
+// 修改物体形状
+imageedit({
+  imageUrl: "https://example.com/object.jpg",
+  prompt: "将圆形花瓶改为方形，保持原有的装饰图案"
+})
+```
+
+### 细节修改
+```typescript
+// 添加装饰
+imageedit({
+  imageUrl: "https://example.com/room.jpg",
+  prompt: "在墙上添加一幅风景画，保持房间整体风格"
+})
+
+// 修改表情
+imageedit({
+  imageUrl: "https://example.com/face.jpg",
+  prompt: "将严肃的表情改为微笑，保持面部特征"
+})
+
+// 修改背景
+imageedit({
+  imageUrl: "https://example.com/photo.jpg",
+  prompt: "将背景改为日落时分，增加温暖的橙色调"
+})
+```
+
+## 提示词技巧
+
+### 目标对象描述
+- **明确对象**：明确指出要修改的对象，如"女孩的头发"、"建筑的外墙"
+- **位置描述**：可以描述对象的位置，如"前景的花朵"、"左侧的树木"
+- **特征描述**：描述对象的特征，如"红色的汽车"、"高大的建筑"
+
+### 修改内容描述
+- **具体变化**：描述具体的修改内容，如"改为红色"、"增加光泽"
+- **保持元素**：明确说明要保持不变的元素，如"保持原有结构"、"保持其他特征"
+- **效果描述**：描述期望的效果，如"增加蓬松感"、"更加现代"
+
+### 指令结构
+```typescript
+// 标准指令结构
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "将[目标对象]的[具体特征]修改为[新特征]，保持[保持不变的元素]"
+})
+
+// 示例
+imageedit({
+  imageUrl: "https://example.com/car.jpg",
+  prompt: "将汽车的轮毂改为黑色，保持车身颜色和车型不变"
+})
+```
+
+## 注意事项
+
+1. **指令清晰**：指令描述越清晰，修改效果越准确
+2. **对象识别**：AI会自动识别目标对象，但复杂场景可能需要更精确的描述
+3. **保持一致性**：修改后的内容会与周围环境保持视觉协调
+4. **避免冲突**：避免在同一个指令中要求相互冲突的修改
+
+
+
+
+
+## 适用场景
+
+- **产品展示**：修改产品颜色、材质等特征
+- **人物编辑**：修改服装、发型、表情等
+- **建筑设计**：修改建筑材质、形状、装饰等
+- **内容创作**：根据需求调整图片细节
+- **教学演示**：展示同一对象的不同变化
+
+## 最佳实践
+
+1. **指令明确**：使用清晰、具体的语言描述修改需求
+2. **目标明确**：明确指出要修改的对象和特征
+3. **保持协调**：确保修改后的内容与整体环境协调
+4. **避免过度**：避免要求过多或相互冲突的修改

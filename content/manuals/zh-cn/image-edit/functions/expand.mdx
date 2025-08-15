@@ -1,0 +1,233 @@
+---
+title: '扩图'
+description: '向四个方向扩展图片，支持自定义缩放比例'
+folder: false
+order: 8
+---
+
+# 扩图
+
+import { CodeExample } from '@coffic/cosy-ui';
+
+扩图功能可以向图片的四个方向（上、下、左、右）智能扩展，增加图片的尺寸和内容。AI会根据原图的内容和风格，在扩展区域生成与周围环境协调的新内容。
+
+## 功能描述
+
+扩图功能利用AI的上下文理解能力，分析原图的边缘内容和风格，然后向指定方向扩展，生成与原有内容自然融合的新区域。这种功能特别适合需要更大画布的场景、调整图片比例或为图片添加更多背景内容。
+
+## 使用方法
+
+```typescript
+imageedit({
+  imageUrl: "http://wanx.alicdn.com/material/20250318/expand_2.jpg",
+  prompt: "一位绿色仙子",
+  function: "expand",
+  topScale: 1.5,
+  bottomScale: 1.5,
+  leftScale: 1.5,
+  rightScale: 1.5
+})
+```
+
+## 参数说明
+
+| 参数 | 类型 | 必需 | 描述 |
+|------|------|------|------|
+| `imageUrl` | string | ✅ | 需要扩展的图片URL |
+| `prompt` | string | ✅ | 扩展内容描述，说明要在扩展区域生成的内容 |
+| `function` | string | ❌ | 固定为"expand" |
+| `topScale` | number | ❌ | 向上扩展的缩放比例，默认1.5 |
+| `bottomScale` | number | ❌ | 向下扩展的缩放比例，默认1.5 |
+| `leftScale` | number | ❌ | 向左扩展的缩放比例，默认1.5 |
+| `rightScale` | number | ❌ | 向右扩展的缩放比例，默认1.5 |
+| `n` | number | ❌ | 生成图片数量，默认1 |
+| `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
+| `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
+
+## 使用示例
+
+### 风景扩展
+```typescript
+// 向四周扩展风景
+imageedit({
+  imageUrl: "https://example.com/landscape.jpg",
+  prompt: "扩展风景，添加更多山脉和天空，保持自然的风格",
+  function: "expand",
+  topScale: 2.0,
+  bottomScale: 1.5,
+  leftScale: 1.8,
+  rightScale: 1.8
+})
+
+// 向上扩展天空
+imageedit({
+  imageUrl: "https://example.com/sky.jpg",
+  prompt: "向上扩展天空，添加更多云朵和渐变色彩",
+  function: "expand",
+  topScale: 2.5,
+  bottomScale: 1.0,
+  leftScale: 1.0,
+  rightScale: 1.0
+})
+```
+
+### 建筑扩展
+```typescript
+// 扩展建筑周围环境
+imageedit({
+  imageUrl: "https://example.com/building.jpg",
+  prompt: "扩展建筑周围，添加街道、树木和行人，保持城市风格",
+  function: "expand",
+  topScale: 1.5,
+  bottomScale: 2.0,
+  leftScale: 1.8,
+  rightScale: 1.8
+})
+
+// 扩展建筑内部
+imageedit({
+  imageUrl: "https://example.com/interior.jpg",
+  prompt: "向四周扩展房间，添加更多家具和装饰，保持室内风格",
+  function: "expand",
+  topScale: 1.5,
+  bottomScale: 1.5,
+  leftScale: 2.0,
+  rightScale: 2.0
+})
+```
+
+### 人物场景扩展
+```typescript
+// 扩展人物背景
+imageedit({
+  imageUrl: "https://example.com/portrait.jpg",
+  prompt: "扩展人物背景，添加更多环境元素，保持肖像风格",
+  function: "expand",
+  topScale: 1.8,
+  bottomScale: 1.8,
+  leftScale: 1.5,
+  rightScale: 1.5
+})
+
+// 扩展人物周围
+imageedit({
+  imageUrl: "https://example.com/person.jpg",
+  prompt: "向四周扩展，添加更多场景元素，保持人物为中心",
+  function: "expand",
+  topScale: 1.5,
+  bottomScale: 2.0,
+  leftScale: 1.8,
+  rightScale: 1.8
+})
+```
+
+### 静物扩展
+```typescript
+// 扩展静物场景
+imageedit({
+  imageUrl: "https://example.com/still_life.jpg",
+  prompt: "扩展静物周围，添加更多装饰元素，保持艺术风格",
+  function: "expand",
+  topScale: 1.5,
+  bottomScale: 1.5,
+  leftScale: 1.8,
+  rightScale: 1.8
+})
+
+// 扩展桌面场景
+imageedit({
+  imageUrl: "https://example.com/table.jpg",
+  prompt: "向四周扩展桌面，添加更多物品和背景，保持生活化风格",
+  function: "expand",
+  topScale: 1.8,
+  bottomScale: 1.8,
+  leftScale: 2.0,
+  rightScale: 2.0
+})
+```
+
+## 提示词技巧
+
+### 扩展内容描述
+- **具体内容**：详细描述要在扩展区域生成的内容，如"更多山脉"、"更多云朵"等
+- **风格保持**：说明要保持的风格，如"保持自然风格"、"保持城市风格"等
+- **环境协调**：描述如何与原有内容协调，如"与周围环境融合"、"保持视觉连续性"等
+
+### 缩放比例选择
+- **1.0-1.5**：轻微扩展，适合小幅调整
+- **1.5-2.0**：中等扩展，适合一般需求
+- **2.0-3.0**：大幅扩展，适合需要大量新内容的场景
+
+### 方向选择策略
+```typescript
+// 常见扩展策略
+1. 四周均匀扩展：topScale: 1.5, bottomScale: 1.5, leftScale: 1.5, rightScale: 1.5
+2. 向上扩展：topScale: 2.0, bottomScale: 1.0, leftScale: 1.0, rightScale: 1.0
+3. 向两侧扩展：topScale: 1.0, bottomScale: 1.0, leftScale: 2.0, rightScale: 2.0
+4. 向下扩展：topScale: 1.0, bottomScale: 2.0, leftScale: 1.0, rightScale: 1.0
+```
+
+### 提示词结构
+```typescript
+// 标准扩图提示词结构
+imageedit({
+  imageUrl: "https://example.com/image.jpg",
+  prompt: "向[方向]扩展，添加[具体内容]，[风格描述]，[协调要求]",
+  function: "expand",
+  topScale: [数值],
+  bottomScale: [数值],
+  leftScale: [数值],
+  rightScale: [数值]
+})
+
+// 示例
+imageedit({
+  imageUrl: "https://example.com/landscape.jpg",
+  prompt: "向四周扩展风景，添加更多山脉、树木和天空，保持自然的风格，与原有内容完美融合",
+  function: "expand",
+  topScale: 1.8,
+  bottomScale: 1.8,
+  leftScale: 1.8,
+  rightScale: 1.8
+})
+```
+
+## 注意事项
+
+1. **比例合理**：扩展比例不要过大，避免生成内容质量下降
+2. **内容协调**：扩展的内容必须与原有内容风格协调
+3. **边缘处理**：注意扩展区域与原有内容的边缘融合
+4. **提示词清晰**：提供清晰的扩展内容描述，确保AI理解需求
+
+
+
+
+
+## 适用场景
+
+- **画布扩展**：为创作项目扩展画布尺寸
+- **比例调整**：调整图片的宽高比例
+- **背景添加**：为图片添加更多背景内容
+- **场景构建**：构建更完整的场景环境
+- **内容创作**：为创意项目添加更多元素
+
+## 最佳实践
+
+1. **比例合理**：选择合理的扩展比例，避免过度扩展
+2. **描述清晰**：提供清晰的扩展内容描述
+3. **风格协调**：确保扩展内容与原有内容风格协调
+4. **分步扩展**：对于大幅扩展，可以分多次进行
+
+## 使用建议
+
+### 轻微扩展
+对于小幅调整，使用1.0-1.5的扩展比例即可。
+
+### 中等扩展
+对于一般需求，使用1.5-2.0的扩展比例较为合适。
+
+### 大幅扩展
+对于需要大量新内容的场景，可以使用2.0-3.0的扩展比例，但要注意内容质量。
+
+### 方向选择
+根据具体需求选择合适的扩展方向，避免不必要的扩展。
