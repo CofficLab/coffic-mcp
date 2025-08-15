@@ -1,0 +1,123 @@
+---
+// 这个组件用于查询所有支持的图像编辑功能
+---
+
+<div class="get-all-capabilities" ignore-heading>
+  <h3>查询所有支持的功能</h3>
+  <button id="getAllCapabilities" class="test-btn">查询所有功能</button>
+  <div id="allCapabilitiesResult" class="result-area"></div>
+</div>
+
+<script>
+  import { actions } from 'astro:actions';
+
+  // 定义类型
+  interface ApiResult {
+    success: boolean;
+    message: string;
+    data: {
+      capabilities: string[];
+      total: number;
+    };
+    error?: string;
+  }
+
+  document
+    .getElementById('getAllCapabilities')
+    ?.addEventListener('click', async () => {
+      const resultArea = document.getElementById('allCapabilitiesResult');
+      if (!resultArea) return;
+
+      resultArea.innerHTML = '<p>查询中...</p>';
+
+      try {
+        const { data, error } = await actions.getImageEditCapabilities({});
+
+        if (error) {
+          resultArea.innerHTML = `<div class="error-result">查询失败: ${error.message}</div>`;
+          return;
+        }
+
+        if (data) {
+          const result = data as ApiResult;
+          const capabilities = result.data.capabilities || [];
+          const capabilitiesHtml = capabilities
+            .map((cap: string) => `<span class="capability-tag">${cap}</span>`)
+            .join('');
+
+          resultArea.innerHTML = `
+          <div class="success-result">
+            <h4>查询成功 (共${result.data.total || 0}个功能)</h4>
+            <div class="capabilities-list">
+              ${capabilitiesHtml}
+            </div>
+          </div>
+        `;
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : '未知错误';
+        resultArea.innerHTML = `<div class="error-result">查询出错: ${errorMessage}</div>`;
+      }
+    });
+</script>
+
+<style>
+  .get-all-capabilities {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+  }
+
+  .test-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 10px 5px;
+  }
+
+  .test-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .result-area {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    min-height: 50px;
+  }
+
+  .success-result {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+
+  .error-result {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+
+  .capabilities-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .capability-tag {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+</style>

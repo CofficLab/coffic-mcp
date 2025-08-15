@@ -1,0 +1,137 @@
+---
+// 这个组件用于查询所有图像编辑模型
+---
+
+<div class="get-all-models" ignore-heading>
+  <h3>查询所有模型</h3>
+  <button id="getAllModels" class="test-btn">查询所有模型</button>
+  <div id="allModelsResult" class="result-area"></div>
+</div>
+
+<script>
+  import { actions } from 'astro:actions';
+
+  // 定义类型
+  interface ImageEditModel {
+    name: string;
+    description: string;
+    capabilities: string[];
+    recommended: boolean;
+  }
+
+  interface ApiResult {
+    success: boolean;
+    message: string;
+    data: {
+      models: ImageEditModel[];
+      total: number;
+      formattedText: string;
+    };
+    error?: string;
+  }
+
+  document
+    .getElementById('getAllModels')
+    ?.addEventListener('click', async () => {
+      const resultArea = document.getElementById('allModelsResult');
+      if (!resultArea) return;
+
+      resultArea.innerHTML = '<p>查询中...</p>';
+
+      try {
+        const { data, error } = await actions.getImageEditModels({
+          includeRecommended: false,
+        });
+
+        if (error) {
+          resultArea.innerHTML = `<div class="error-result">查询失败: ${error.message}</div>`;
+          return;
+        }
+
+        if (data) {
+          const result = data as ApiResult;
+          const models = result.data.models || [];
+          const modelsHtml = models
+            .map(
+              (model: ImageEditModel) => `
+          <div class="model-item">
+            <h4>${model.recommended ? '⭐ ' : ''}${model.name}</h4>
+            <p><strong>描述:</strong> ${model.description}</p>
+            <p><strong>能力:</strong> ${model.capabilities.join(', ')}</p>
+            <p><strong>推荐:</strong> ${model.recommended ? '是' : '否'}</p>
+          </div>
+        `
+            )
+            .join('');
+
+          resultArea.innerHTML = `
+          <div class="success-result">
+            <h4>查询成功 (共${result.data.total || 0}个模型)</h4>
+            ${modelsHtml}
+          </div>
+        `;
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : '未知错误';
+        resultArea.innerHTML = `<div class="error-result">查询出错: ${errorMessage}</div>`;
+      }
+    });
+</script>
+
+<style>
+  .get-all-models {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+  }
+
+  .test-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 10px 5px;
+  }
+
+  .test-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .result-area {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    min-height: 50px;
+  }
+
+  .success-result {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+  }
+
+  .error-result {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+
+  .model-item {
+    background-color: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border-left: 4px solid #007bff;
+  }
+
+  .model-item h4 {
+    margin-top: 0;
+    color: #2c3e50;
+  }
+</style>
