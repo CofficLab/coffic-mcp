@@ -42,7 +42,7 @@ import { Button, Container } from '@coffic/cosy-ui';
           const result = data as ApiResult;
           const capabilities = result.data.capabilities || [];
           const capabilitiesHtml = capabilities
-            .map((cap: string) => `<span class="capability-tag">${cap}</span>`)
+            .map((cap: string) => `<div class="capability-tag">${cap}</div>`)
             .join('');
 
           resultArea.innerHTML = `
