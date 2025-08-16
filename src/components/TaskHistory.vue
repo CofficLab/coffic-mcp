@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useImageEdit, type ImageEditTask } from '@/composables/useImageEdit';
 import { useTaskStatus } from '@/composables/useTaskStatus';
-import { EyeIcon, TrashIcon, RefreshIcon } from '@/components/icons';
-import { ImageDisplay } from '@coffic/cosy-ui/vue';
+import { ImageDisplay, RefreshIcon, ViewIcon } from '@coffic/cosy-ui/vue';
+import { DeleteIcon } from '@coffic/cosy-ui/vue';
 
 // 获取任务历史和功能类型工具方法
 const { taskHistory, getFunctionTypeDisplayName } = useImageEdit();
@@ -131,10 +131,10 @@ const extractImageUrls = (result: string): string[] => {
             <!-- 状态 -->
             <td>
               <div :class="`w-16 badge badge-sm ${task.status === 'pending'
-                  ? 'badge-warning'
-                  : task.status === 'completed'
-                    ? 'badge-success'
-                    : 'badge-error'
+                ? 'badge-warning'
+                : task.status === 'completed'
+                  ? 'badge-success'
+                  : 'badge-error'
                 }`">
                 {{ getStatusDisplay(task.status).text }}
               </div>
@@ -183,12 +183,12 @@ const extractImageUrls = (result: string): string[] => {
 
                 <!-- 查看详情按钮 -->
                 <button @click="viewTaskDetails(task)" class="btn btn-ghost btn-xs" title="查看详情">
-                  <EyeIcon class="w-4 h-4" />
+                  <ViewIcon class="w-4 h-4" />
                 </button>
 
                 <!-- 删除按钮 -->
                 <button @click="clearTask(task.id)" class="btn btn-ghost btn-error btn-xs" title="删除任务">
-                  <TrashIcon class="w-4 h-4" />
+                  <DeleteIcon />
                 </button>
               </div>
             </td>
