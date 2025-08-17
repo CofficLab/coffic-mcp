@@ -20,7 +20,7 @@
     "@astrojs/mdx": "^4.3.4",
     "@astrojs/vue": "^5.1.0",
     "@coffic/cosy-content": "^0.2.25",
-    "@coffic/cosy-ui": "^0.9.37",
+    "@coffic/cosy-ui": "^0.9.38",
     "@modelcontextprotocol/sdk": "1.17.1",
     "@tailwindcss/vite": "^4.1.12",
     "@vueuse/core": "^13.6.0",
