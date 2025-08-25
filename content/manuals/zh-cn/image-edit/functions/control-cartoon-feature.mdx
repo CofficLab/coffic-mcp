@@ -7,9 +7,6 @@ order: 11
 
 # 卡通形象控制
 
-import { CodeExample } from '@coffic/cosy-ui';
-import ImageEditDemo from '@/components/image-edit/ImageEditDemo.vue';
-
 ## 功能描述
 
 卡通形象控制利用AI的深度理解能力，分析参考卡通形象的特征、风格和个性，然后根据用户的创意描述生成新的图像。这种功能特别适合为卡通角色创建新的场景、表情、动作或服装，让卡通形象更加生动和有趣。
@@ -34,7 +31,3 @@ imageedit({
 | `n` | number | ❌ | 生成图片数量，默认1 |
 | `model` | string | ❌ | 使用的模型，默认wanx2.1-imageedit |
 | `dashScopeApiKey` | string | ❌ | DashScope API密钥 |
-
-## 功能演示
-
-<ImageEditDemo client:only="vue" defaultFunctionType="control_cartoon_feature" />

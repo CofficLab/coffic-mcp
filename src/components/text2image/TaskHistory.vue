@@ -69,14 +69,15 @@ const getStatusStyle = (status: string) => {
 
 // 处理查看任务
 const handleViewTask = (task: TaskHistoryItem) => {
-    props.onViewTask?.(task)
+    // 任务详情已经在列表中显示，点击可以滚动到顶部或高亮显示
+    console.log('查看任务详情:', task.taskId)
 }
 
 // 处理删除任务
 const handleDeleteTask = (taskId: string) => {
     if (confirm(props.lang === 'zh-cn' ? '确定要删除这个任务吗？' : 'Are you sure you want to delete this task?')) {
         removeTask(taskId)
-        props.onDeleteTask?.(taskId)
+        // 任务已从localStorage中删除，无需额外回调
     }
 }
 

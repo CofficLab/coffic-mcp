@@ -7,8 +7,6 @@ import { useApiKeyManager, type ApiKeyConfig } from '@/composables/useApiKeyMana
 import { useLocalStorage } from '@/composables/useLocalStorage';
 import { useTaskHistory, type TaskHistoryItem } from '@/composables/useTaskHistory';
 import type { ModelInfo } from '@/libs/text2image/models';
-import TaskStatusCard from './TaskStatusCard.vue';
-import GeneratedImages from './GeneratedImages.vue';
 import Text2ImageForm from './Text2ImageForm.vue';
 import TaskHistory from './TaskHistory.vue';
 
@@ -26,18 +24,6 @@ const formData = reactive({
   model: '',
   size: '1024*1024',
   count: 1,
-});
-
-const taskStatus = ref<{
-  taskId: string | null;
-  status: string;
-  images: string[];
-  isPolling: boolean;
-}>({
-  taskId: null,
-  status: '',
-  images: [],
-  isPolling: false,
 });
 
 const isSubmitting = ref(false);
@@ -63,7 +49,7 @@ const { apiKeys, getAllApiKeys, validateApiKeys, hasApiKeys } = useApiKeyManager
 const { storedValue: savedModel, setStoredValue: setSavedModel } = useLocalStorage('text2image_selected_model', '');
 
 // 任务历史管理
-const { addTask, updateTask, getTask } = useTaskHistory();
+const { addTask, updateTask } = useTaskHistory();
 
 // 计算属性
 const isFormValid = computed(() => {
@@ -81,41 +67,6 @@ const selectedModelInfo = computed(() => {
   const model = models.value.find((m) => m.id === formData.model);
   if (model) return model;
   return null;
-});
-
-const statusText = computed(() => {
-  const status = taskStatus.value.status;
-  if (props.lang === 'zh-cn') {
-    switch (status) {
-      case 'PENDING':
-        return '任务已提交，等待处理';
-      case 'RUNNING':
-        return '正在生成图像...';
-      case 'SUCCEEDED':
-        return '生成成功';
-      case 'FAILED':
-        return '生成失败';
-      case 'CANCELLED':
-        return '任务已取消';
-      default:
-        return status || '准备就绪';
-    }
-  } else {
-    switch (status) {
-      case 'PENDING':
-        return 'Task submitted, waiting for processing';
-      case 'RUNNING':
-        return 'Generating images...';
-      case 'SUCCEEDED':
-        return 'Generation successful';
-      case 'FAILED':
-        return 'Generation failed';
-      case 'CANCELLED':
-        return 'Task cancelled';
-      default:
-        return status || 'Ready';
-    }
-  }
 });
 
 // 图片尺寸选项
@@ -198,11 +149,6 @@ const submitTask = async () => {
     }
 
     if (data) {
-      taskStatus.value.taskId = data.task_id;
-      taskStatus.value.status = data.task_status;
-      taskStatus.value.images = [];
-      taskStatus.value.isPolling = true;
-
       // 将任务添加到历史记录
       addTask({
         taskId: data.task_id,
@@ -219,9 +165,6 @@ const submitTask = async () => {
           ? '任务已提交，开始生成图像'
           : 'Task submitted, starting image generation'
       );
-
-      // 开始轮询任务状态
-      pollTaskStatus();
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : '未知错误';
@@ -232,113 +175,9 @@ const submitTask = async () => {
   }
 };
 
-// 轮询任务状态
-const pollTaskStatus = async () => {
-  if (!taskStatus.value.taskId) return;
-
-  try {
-    const result = await actions.text2imageStatusAction({
-      taskId: taskStatus.value.taskId,
-    });
-
-    if (result.error) {
-      throw new Error(result.error.message);
-    }
-
-    if (result.data?.status) {
-      taskStatus.value.status = result.data.status;
-
-      // 更新任务历史中的状态
-      updateTask(taskStatus.value.taskId, { status: result.data.status });
-
-      // 如果任务成功，获取生成的图片
-      if (result.data.status === 'SUCCEEDED' && result.data.data?.output) {
-        const output = result.data.data.output;
-        if (output.results && output.results.length > 0) {
-          const images = output.results.map((result: any) => result.url);
-          taskStatus.value.images = images;
-
-          // 更新任务历史中的图片列表
-          updateTask(taskStatus.value.taskId, { images });
-        }
-        taskStatus.value.isPolling = false;
-        showSuccessMessage(
-          props.lang === 'zh-cn'
-            ? '图像生成成功！'
-            : 'Image generation successful!'
-        );
-      } else if (result.data.status === 'FAILED') {
-        taskStatus.value.isPolling = false;
-        showErrorMessage(
-          props.lang === 'zh-cn' ? '图像生成失败' : 'Image generation failed'
-        );
-      } else if (['PENDING', 'RUNNING'].includes(result.data.status)) {
-        // 继续轮询
-        setTimeout(pollTaskStatus, 2000);
-      } else {
-        taskStatus.value.isPolling = false;
-      }
-    }
-  } catch (error) {
-    console.error('查询任务状态失败:', error);
-    taskStatus.value.isPolling = false;
-    showErrorMessage(
-      props.lang === 'zh-cn'
-        ? '查询任务状态失败'
-        : 'Failed to query task status'
-    );
-  }
-};
-
 // 重置表单
 const resetForm = () => {
   formData.prompt = '';
-  taskStatus.value = {
-    taskId: null,
-    status: '',
-    images: [],
-    isPolling: false,
-  };
-};
-
-// 停止轮询
-const stopPolling = () => {
-  taskStatus.value.isPolling = false;
-};
-
-// 打开图片链接
-const openImage = (url: string) => {
-  if (typeof window !== 'undefined') {
-    window.open(url, '_blank');
-  }
-};
-
-// 查看任务详情
-const viewTask = (task: TaskHistoryItem) => {
-  // 设置当前任务状态用于显示
-  taskStatus.value.taskId = task.taskId;
-  taskStatus.value.status = task.status;
-  taskStatus.value.images = task.images;
-  taskStatus.value.isPolling = false;
-
-  // 滚动到任务状态区域
-  const statusElement = document.querySelector('.task-status-section');
-  if (statusElement) {
-    statusElement.scrollIntoView({ behavior: 'smooth' });
-  }
-};
-
-// 删除任务
-const deleteTask = (taskId: string) => {
-  // 如果当前正在显示的任务被删除，清除状态
-  if (taskStatus.value.taskId === taskId) {
-    taskStatus.value = {
-      taskId: null,
-      status: '',
-      images: [],
-      isPolling: false,
-    };
-  }
 };
 
 // 刷新单个任务状态
@@ -366,17 +205,6 @@ const refreshTask = async (taskId: string) => {
         if (output.results && output.results.length > 0) {
           const images = output.results.map((result: any) => result.url);
           updateTask(taskId, { images });
-        }
-      }
-
-      // 如果当前正在显示的任务就是被刷新的任务，更新显示状态
-      if (taskStatus.value.taskId === taskId) {
-        taskStatus.value.status = data.status;
-        if (data.status === 'SUCCEEDED' && data.data?.output) {
-          const output = data.data.output;
-          if (output.results && output.results.length > 0) {
-            taskStatus.value.images = output.results.map((result: any) => result.url);
-          }
         }
       }
 
@@ -413,20 +241,9 @@ const refreshTask = async (taskId: string) => {
         {{ messageText }}
       </Alert>
 
-      <!-- 任务状态区域 -->
-      <div v-if="taskStatus.taskId || taskStatus.status" class="space-y-4 task-status-section">
-        <TaskStatusCard :task-status="taskStatus" :status-text="statusText" :lang="lang"
-          :on-stop-polling="stopPolling" />
-      </div>
-
-      <!-- 生成结果区域 -->
-      <GeneratedImages v-if="taskStatus.images.length > 0" :images="taskStatus.images" :lang="lang"
-        :on-open-image="openImage" />
-
       <!-- 任务历史区域 -->
       <div class="border-t pt-8">
-        <TaskHistory :models="models" :lang="lang" :on-view-task="viewTask" :on-delete-task="deleteTask"
-          :on-refresh-task="refreshTask" />
+        <TaskHistory :models="models" :lang="lang" :on-refresh-task="refreshTask" />
       </div>
     </div>
   </Container>

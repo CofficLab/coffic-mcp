@@ -7,11 +7,6 @@ order: 2
 
 # 模型查询
 
-import { CodeExample } from '@coffic/cosy-ui';
-import GetAllModels from '@/components/image-edit/GetAllModels.astro';
-import GetRecommendedModels from '@/components/image-edit/GetRecommendedModels.astro';
-import GetAllCapabilities from '@/components/image-edit/GetAllCapabilities.astro';
-
 `imageedit_models` 工具用于查询图像编辑功能支持的模型列表，帮助用户了解可用的模型和它们的能力。
 
 ## 使用方法
@@ -29,16 +24,3 @@ imageedit_models()
 - **模型描述** - 模型的详细说明
 - **支持能力** - 模型支持的所有编辑功能
 - **推荐状态** - 是否为推荐使用的模型
-
-## 功能测试
-
-下面是一系列独立的测试组件，你可以实际测试各种模型查询功能：
-
-### 1. 查询所有模型
-<GetAllModels  />
-
-### 2. 查询推荐模型
-<GetRecommendedModels  />
-
-### 3. 查询所有支持的功能
-<GetAllCapabilities  />

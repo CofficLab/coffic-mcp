@@ -135,13 +135,3 @@ const props = defineProps<Props>();
         </div>
     </div>
 </template>
-
-<style scoped>
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-textarea {
-    min-height: 100px;
-}
-</style>
