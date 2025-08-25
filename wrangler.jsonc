@@ -5,7 +5,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "coffic-mcp",
-	"main": "src/index.ts",
+	"main": "./dist/_worker.js/index.js",
 	"compatibility_date": "2025-03-10",
 	"compatibility_flags": [
 		"nodejs_compat"
