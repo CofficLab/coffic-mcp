@@ -5,10 +5,12 @@ import { Container, Alert } from '@coffic/cosy-ui/vue';
 import { useUIState } from '@/composables/useUIState';
 import { useApiKeyManager, type ApiKeyConfig } from '@/composables/useApiKeyManager';
 import { useLocalStorage } from '@/composables/useLocalStorage';
+import { useTaskHistory, type TaskHistoryItem } from '@/composables/useTaskHistory';
 import type { ModelInfo } from '@/libs/text2image/models';
 import TaskStatusCard from './TaskStatusCard.vue';
 import GeneratedImages from './GeneratedImages.vue';
 import Text2ImageForm from './Text2ImageForm.vue';
+import TaskHistory from './TaskHistory.vue';
 
 // Props
 interface Props {
@@ -59,6 +61,9 @@ const { apiKeys, getAllApiKeys, validateApiKeys, hasApiKeys } = useApiKeyManager
 
 // 模型选择存储
 const { storedValue: savedModel, setStoredValue: setSavedModel } = useLocalStorage('text2image_selected_model', '');
+
+// 任务历史管理
+const { addTask, updateTask, getTask } = useTaskHistory();
 
 // 计算属性
 const isFormValid = computed(() => {
@@ -198,6 +203,17 @@ const submitTask = async () => {
       taskStatus.value.images = [];
       taskStatus.value.isPolling = true;
 
+      // 将任务添加到历史记录
+      addTask({
+        taskId: data.task_id,
+        prompt: formData.prompt.trim(),
+        model: formData.model,
+        size: formData.size,
+        count: formData.count,
+        status: data.task_status,
+        images: [],
+      });
+
       showSuccessMessage(
         props.lang === 'zh-cn'
           ? '任务已提交，开始生成图像'
@@ -232,13 +248,18 @@ const pollTaskStatus = async () => {
     if (result.data?.status) {
       taskStatus.value.status = result.data.status;
 
+      // 更新任务历史中的状态
+      updateTask(taskStatus.value.taskId, { status: result.data.status });
+
       // 如果任务成功，获取生成的图片
       if (result.data.status === 'SUCCEEDED' && result.data.data?.output) {
         const output = result.data.data.output;
         if (output.results && output.results.length > 0) {
-          taskStatus.value.images = output.results.map(
-            (result: any) => result.url
-          );
+          const images = output.results.map((result: any) => result.url);
+          taskStatus.value.images = images;
+
+          // 更新任务历史中的图片列表
+          updateTask(taskStatus.value.taskId, { images });
         }
         taskStatus.value.isPolling = false;
         showSuccessMessage(
@@ -291,6 +312,34 @@ const openImage = (url: string) => {
     window.open(url, '_blank');
   }
 };
+
+// 查看任务详情
+const viewTask = (task: TaskHistoryItem) => {
+  // 设置当前任务状态用于显示
+  taskStatus.value.taskId = task.taskId;
+  taskStatus.value.status = task.status;
+  taskStatus.value.images = task.images;
+  taskStatus.value.isPolling = false;
+
+  // 滚动到任务状态区域
+  const statusElement = document.querySelector('.task-status-section');
+  if (statusElement) {
+    statusElement.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
+// 删除任务
+const deleteTask = (taskId: string) => {
+  // 如果当前正在显示的任务被删除，清除状态
+  if (taskStatus.value.taskId === taskId) {
+    taskStatus.value = {
+      taskId: null,
+      status: '',
+      images: [],
+      isPolling: false,
+    };
+  }
+};
 </script>
 
 <template>
@@ -309,7 +358,7 @@ const openImage = (url: string) => {
       </Alert>
 
       <!-- 任务状态区域 -->
-      <div v-if="taskStatus.taskId || taskStatus.status" class="space-y-4">
+      <div v-if="taskStatus.taskId || taskStatus.status" class="space-y-4 task-status-section">
         <TaskStatusCard :task-status="taskStatus" :status-text="statusText" :lang="lang"
           :on-stop-polling="stopPolling" />
       </div>
@@ -317,6 +366,11 @@ const openImage = (url: string) => {
       <!-- 生成结果区域 -->
       <GeneratedImages v-if="taskStatus.images.length > 0" :images="taskStatus.images" :lang="lang"
         :on-open-image="openImage" />
+
+      <!-- 任务历史区域 -->
+      <div class="border-t pt-8">
+        <TaskHistory :models="models" :lang="lang" :on-view-task="viewTask" :on-delete-task="deleteTask" />
+      </div>
     </div>
   </Container>
 </template>
