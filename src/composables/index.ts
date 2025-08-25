@@ -7,10 +7,8 @@ export { useApiKeyManager } from './useApiKeyManager'
 export { useFunctionTypes } from './useFunctionTypes'
 
 // 导出组件
-export { default as TaskHistory } from '@/components/TaskHistory.vue'
-export { default as ImageEditDemo } from '@/components/ImageEditDemo.vue'
-export { default as ImageDisplay } from '@/components/ImageDisplay.vue'
-export { EyeIcon, TrashIcon, XIcon, RefreshIcon } from '@/components/icons'
+export { default as TaskHistory } from 'content/manuals/components/TaskHistory.vue'
+export { default as ImageEditDemo } from 'content/manuals/components/ImageEditDemo.vue'
 
 // 重新导出类型
 export type { ValidationRule, ValidationRules } from './useFormValidation'
