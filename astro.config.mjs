@@ -39,5 +39,7 @@ export default defineConfig({
   },
 
   integrations: [mdx(), vue()],
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    imageService: "compile",
+  }),
 });
