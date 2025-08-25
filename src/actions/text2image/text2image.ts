@@ -10,7 +10,7 @@ export const text2imageAction = defineAction({
         size: z.string().optional().describe("默认值是1024*1024。图像宽高边长的像素范围为：[512, 1440]，单位像素。可任意组合以设置不同的图像分辨率，最高可达200万像素。"),
         n: z.number().optional().describe("生成图片数量，默认1"),
         model: z.string().optional().describe("模型，使用getText2ImageModels工具查询支持的模型，使用推荐的模型可得到最佳的效果"),
-        dashScopeApiKey: z.string().optional().describe("DashScope API密钥"),
+        dashScopeApiKey: z.string().describe("DashScope API密钥"),
     }),
     handler: async (input) => {
         try {

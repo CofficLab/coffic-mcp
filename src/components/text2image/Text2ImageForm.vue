@@ -28,6 +28,7 @@ interface Props {
     lang: string;
     sizeOptions: SizeOption[];
     countOptions: CountOption[];
+    apiKeys: any[];
     onSubmit: () => void;
     onReset: () => void;
 }
@@ -37,6 +38,20 @@ const props = defineProps<Props>();
 
 <template>
     <div class="space-y-6">
+        <!-- API Key 配置 -->
+        <div v-for="apiKey in apiKeys" :key="apiKey.key" class="form-group">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+                {{ lang === 'zh-cn' ? apiKey.name : apiKey.name }}
+                <span class="text-red-500">*</span>
+            </label>
+            <input v-model="apiKey.storedValue.value" :type="'text'"
+                :placeholder="apiKey.placeholder || (lang === 'zh-cn' ? '请输入API密钥' : 'Enter API key')"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+            <div v-if="apiKey.description" class="mt-1 text-sm text-gray-500">
+                {{ lang === 'zh-cn' ? apiKey.description : apiKey.description }}
+            </div>
+        </div>
+
         <!-- 模型选择 -->
         <div class="form-group">
             <label class="block text-sm font-medium text-gray-700 mb-2">

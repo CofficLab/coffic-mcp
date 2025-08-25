@@ -3,6 +3,7 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import { actions } from 'astro:actions';
 import { Container, Alert } from '@coffic/cosy-ui/vue';
 import { useUIState } from '@/composables/useUIState';
+import { useApiKeyManager, type ApiKeyConfig } from '@/composables/useApiKeyManager';
 import type { ModelInfo } from '@/libs/text2image/models';
 import TaskStatusCard from './TaskStatusCard.vue';
 import GeneratedImages from './GeneratedImages.vue';
@@ -42,12 +43,26 @@ const models = ref<ModelInfo[]>([]);
 // UI 状态管理
 const { showSuccessMessage, showErrorMessage, showMessage, messageText, messageType, isMessageVisible } = useUIState();
 
+// API Key 管理
+const apiKeyConfigs: ApiKeyConfig[] = [
+  {
+    key: 'dashScopeApiKey',
+    name: 'DashScope API Key',
+    description: '用于调用 DashScope 文本转图像服务的 API 密钥',
+    placeholder: '请输入您的 DashScope API Key',
+    required: true,
+  },
+];
+
+const { apiKeys, getAllApiKeys, validateApiKeys, hasApiKeys } = useApiKeyManager(apiKeyConfigs);
+
 // 计算属性
 const isFormValid = computed(() => {
   return (
     formData.prompt.trim().length > 0 &&
     formData.prompt.length <= 800 &&
-    formData.model.length > 0
+    formData.model.length > 0 &&
+    hasApiKeys.value
   );
 });
 
@@ -143,11 +158,20 @@ const submitTask = async () => {
   isSubmitting.value = true;
 
   try {
+    // 验证 API key
+    const apiKeyErrors = validateApiKeys();
+    if (apiKeyErrors.length > 0) {
+      throw new Error(apiKeyErrors.join(', '));
+    }
+
+    const allApiKeys = getAllApiKeys.value;
+
     const { data, error } = await actions.text2imageAction({
       prompt: formData.prompt.trim(),
       size: formData.size,
       n: formData.count,
       model: formData.model,
+      dashScopeApiKey: allApiKeys.dashScopeApiKey,
     });
 
     if (error) {
@@ -261,7 +285,7 @@ const openImage = (url: string) => {
       <!-- 表单区域 -->
       <Text2ImageForm :models="models" :form-data="formData" :selected-model-info="selectedModelInfo"
         :is-form-valid="isFormValid" :is-submitting="isSubmitting" :lang="lang" :size-options="sizeOptions"
-        :count-options="countOptions" :on-submit="submitTask" :on-reset="resetForm" />
+        :count-options="countOptions" :api-keys="apiKeys" :on-submit="submitTask" :on-reset="resetForm" />
 
       <!-- 消息提示 -->
       <Alert v-if="isMessageVisible" :type="messageType as 'success' | 'error' | 'warning' | 'info'"
