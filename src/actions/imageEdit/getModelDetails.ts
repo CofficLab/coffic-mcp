@@ -16,28 +16,17 @@ export const getModelDetails = defineAction({
             const model = getModelByName(modelName);
 
             if (!model) {
-                return {
-                    success: false,
-                    message: '未找到指定模型',
-                    data: null
-                };
+                throw new Error('未找到指定模型');
             }
 
             return {
-                success: true,
                 message: '查询成功',
-                data: {
-                    model: model
-                }
+                model: model
             };
 
         } catch (error) {
             console.error('查询模型详情失败:', error);
-            return {
-                success: false,
-                message: '查询模型详情失败',
-                error: error instanceof Error ? error.message : '未知错误'
-            };
+            throw new Error(`查询模型详情失败: ${error instanceof Error ? error.message : '未知错误'}`);
         }
     },
 });

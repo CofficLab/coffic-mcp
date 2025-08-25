@@ -17,30 +17,20 @@ export const imageEditStatusAction = defineAction({
             // 验证请求参数
             const validation = statusCore.validateRequest(input);
             if (!validation.success) {
-                return {
-                    success: false,
-                    message: `参数验证失败: ${validation.error}`,
-                    status: 'error'
-                };
+                throw new Error(`参数验证失败: ${validation.error}`);
             }
 
             // 查询任务状态
             const result = await statusCore.queryStatus(validation.data!);
 
             return {
-                success: result.success,
                 message: result.message,
                 status: result.status,
                 images: result.images || [],
                 error: result.error
             };
         } catch (error) {
-            return {
-                success: false,
-                message: `服务器内部错误: ${error instanceof Error ? error.message : '未知错误'}`,
-                status: 'error',
-                error: 'INTERNAL_ERROR'
-            };
+            throw new Error(`服务器内部错误: ${error instanceof Error ? error.message : '未知错误'}`);
         }
     }
 });
@@ -66,10 +56,6 @@ export async function callImageEditStatusAction(params: {
 
         return await response.json();
     } catch (error) {
-        return {
-            success: false,
-            message: `请求失败: ${error instanceof Error ? error.message : '未知错误'}`,
-            status: 'error'
-        };
+        throw new Error(`请求失败: ${error instanceof Error ? error.message : '未知错误'}`);
     }
 }

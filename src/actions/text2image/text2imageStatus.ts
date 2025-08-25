@@ -15,11 +15,7 @@ export const text2imageStatusAction = defineAction({
             const apiKey = process.env.DASHSCOPE_API_KEY || input.dashScopeApiKey;
 
             if (!apiKey) {
-                return {
-                    success: false,
-                    message: "错误: 需要提供DASHSCOPE_API_KEY环境变量或参数",
-                    status: 'error'
-                };
+                throw new Error("需要提供DASHSCOPE_API_KEY环境变量或参数");
             }
 
             // 创建文本转图像核心实例
@@ -32,18 +28,12 @@ export const text2imageStatusAction = defineAction({
             });
 
             return {
-                success: true,
                 message: '查询成功',
                 status: result.output.task_status,
                 data: result
             };
         } catch (error) {
-            return {
-                success: false,
-                message: `服务器内部错误: ${error instanceof Error ? error.message : '未知错误'}`,
-                status: 'error',
-                error: 'INTERNAL_ERROR'
-            };
+            throw new Error(`服务器内部错误: ${error instanceof Error ? error.message : '未知错误'}`);
         }
     }
 });
@@ -69,10 +59,6 @@ export async function callText2ImageStatusAction(params: {
 
         return await response.json();
     } catch (error) {
-        return {
-            success: false,
-            message: `请求失败: ${error instanceof Error ? error.message : '未知错误'}`,
-            status: 'error'
-        };
+        throw new Error(`请求失败: ${error instanceof Error ? error.message : '未知错误'}`);
     }
 }

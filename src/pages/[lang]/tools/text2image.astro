@@ -1,9 +1,11 @@
 ---
 export const prerender = false;
 
-import { actions } from 'astro:actions';
 import DemoLayout from '@/layouts/DemoLayout.astro';
 import Text2ImageTool from '@/components/text2image/Text2ImageTool.vue';
+import { text2imageModels } from '@/libs/text2image/models';
+import { Heading } from '@coffic/cosy-ui';
+
 // 获取当前语言
 const { lang } = Astro.params;
 const currentLang = lang || 'zh-cn';
@@ -11,26 +13,18 @@ const currentLang = lang || 'zh-cn';
 // 页面标题
 const title = currentLang === 'zh-cn' ? '文本转图像工具' : 'Text to Image Tool';
 
-// 获取文生图模型列表（服务端渲染）
-let modelsData = null;
-try {
-  const result = await Astro.callAction(actions.getText2ImageModels, {});
-  if (result.data?.data) {
-    modelsData = result.data.data;
-  }
-} catch (error) {
-  console.error('获取模型列表失败:', error);
-}
+// 获取文生图模型列表
+const models = text2imageModels;
 ---
 
-<DemoLayout title={title}>
+<DemoLayout title={title} showSidebar={false} showTOC={false}>
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        <Heading level={2} align="center">
           {lang === 'zh-cn' ? '文本转图像工具' : 'Text to Image Tool'}
-        </h1>
-        <p class="text-gray-600">
+        </Heading>
+        <p>
           {
             lang === 'zh-cn'
               ? '使用 AI 将文字描述转换为精美的图像'
@@ -40,7 +34,7 @@ try {
       </div>
 
       <!-- 文生图工具组件 -->
-      <Text2ImageTool client:load {modelsData} lang={currentLang} />
+      <Text2ImageTool client:load models={models} lang={currentLang} />
     </div>
   </div>
 </DemoLayout>

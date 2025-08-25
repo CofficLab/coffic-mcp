@@ -34,7 +34,7 @@ export default defineConfig({
       },
     },
 
-    // @ts-ignore
+    // @ts-expect-error
     plugins: [tailwindcss()],
   },
 

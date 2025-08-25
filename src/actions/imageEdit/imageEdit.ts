@@ -37,10 +37,7 @@ export const imageEditAction = defineAction({
             const apiKey = process.env.DASHSCOPE_API_KEY || input.dashScopeApiKey;
 
             if (!apiKey) {
-                return {
-                    success: false,
-                    message: "错误: 需要提供DASHSCOPE_API_KEY环境变量或参数"
-                };
+                throw new Error("需要提供DASHSCOPE_API_KEY环境变量或参数");
             }
 
             // 创建图像编辑核心实例
@@ -49,10 +46,7 @@ export const imageEditAction = defineAction({
             // 验证请求参数
             const validation = imageEditCore.validateRequest(input);
             if (!validation.valid) {
-                return {
-                    success: false,
-                    message: `参数验证失败: ${validation.errors.join(', ')}`
-                };
+                throw new Error(`参数验证失败: ${validation.errors.join(', ')}`);
             }
 
             // 执行图像编辑任务
@@ -60,10 +54,7 @@ export const imageEditAction = defineAction({
 
             return result;
         } catch (error) {
-            return {
-                success: false,
-                message: `服务器内部错误: ${error instanceof Error ? error.message : '未知错误'}`
-            };
+            throw new Error(`服务器内部错误: ${error instanceof Error ? error.message : '未知错误'}`);
         }
     }
 });
@@ -94,15 +85,9 @@ export const getImageEditFunctionConfigAction = defineAction({
             // 获取功能配置
             const config = imageEditCore.getFunctionConfig(input.function);
 
-            return {
-                success: true,
-                config
-            };
+            return config;
         } catch (error) {
-            return {
-                success: false,
-                message: `获取功能配置失败: ${error instanceof Error ? error.message : '未知错误'}`
-            };
+            throw new Error(`获取功能配置失败: ${error instanceof Error ? error.message : '未知错误'}`);
         }
     }
 });
@@ -126,14 +111,10 @@ export const getAllImageEditFunctionsAction = defineAction({
             }));
 
             return {
-                success: true,
                 functions: functionConfigs
             };
         } catch (error) {
-            return {
-                success: false,
-                message: `获取功能列表失败: ${error instanceof Error ? error.message : '未知错误'}`
-            };
+            throw new Error(`获取功能列表失败: ${error instanceof Error ? error.message : '未知错误'}`);
         }
     }
 });

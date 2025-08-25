@@ -32,22 +32,15 @@ export const getImageEditModels = defineAction({
             }).join('\n\n');
 
             return {
-                success: true,
                 message: '查询成功',
-                data: {
-                    models: filteredModels,
-                    total: filteredModels.length,
-                    formattedText: `支持的图像编辑模型：\n\n${modelsText}`
-                }
+                models: filteredModels,
+                total: filteredModels.length,
+                formattedText: `支持的图像编辑模型：\n\n${modelsText}`
             };
 
         } catch (error) {
             console.error('查询图像编辑模型失败:', error);
-            return {
-                success: false,
-                message: '查询图像编辑模型失败',
-                error: error instanceof Error ? error.message : '未知错误'
-            };
+            throw new Error(`查询图像编辑模型失败: ${error instanceof Error ? error.message : '未知错误'}`);
         }
     },
 });

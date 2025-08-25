@@ -17,33 +17,23 @@ export const getModelsByCapabilityAction = defineAction({
 
             if (supportedModels.length === 0) {
                 return {
-                    success: true,
                     message: '未找到支持该功能的模型',
-                    data: {
-                        capability: capability,
-                        models: [],
-                        total: 0
-                    }
+                    capability: capability,
+                    models: [],
+                    total: 0
                 };
             }
 
             return {
-                success: true,
                 message: '查询成功',
-                data: {
-                    capability: capability,
-                    models: supportedModels,
-                    total: supportedModels.length
-                }
+                capability: capability,
+                models: supportedModels,
+                total: supportedModels.length
             };
 
         } catch (error) {
             console.error('按功能查询模型失败:', error);
-            return {
-                success: false,
-                message: '按功能查询模型失败',
-                error: error instanceof Error ? error.message : '未知错误'
-            };
+            throw new Error(`按功能查询模型失败: ${error instanceof Error ? error.message : '未知错误'}`);
         }
     },
 });

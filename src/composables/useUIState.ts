@@ -32,44 +32,28 @@ export function useUIState() {
     }
 
     // 显示消息
-    const showSuccessMessage = (text: string, duration = 3000) => {
+    const showSuccessMessage = (text: string, duration?: number) => {
         messageType.value = 'success'
         messageText.value = text
         showMessage.value = true
-
-        setTimeout(() => {
-            showMessage.value = false
-        }, duration)
     }
 
-    const showErrorMessage = (text: string, duration = 5000) => {
+    const showErrorMessage = (text: string, duration?: number) => {
         messageType.value = 'error'
         messageText.value = text
         showMessage.value = true
-
-        setTimeout(() => {
-            showMessage.value = false
-        }, duration)
     }
 
-    const showWarningMessage = (text: string, duration = 4000) => {
+    const showWarningMessage = (text: string, duration?: number) => {
         messageType.value = 'warning'
         messageText.value = text
         showMessage.value = true
-
-        setTimeout(() => {
-            showMessage.value = false
-        }, duration)
     }
 
-    const showInfoMessage = (text: string, duration = 3000) => {
+    const showInfoMessage = (text: string, duration?: number) => {
         messageType.value = 'info'
         messageText.value = text
         showMessage.value = true
-
-        setTimeout(() => {
-            showMessage.value = false
-        }, duration)
     }
 
     // 隐藏消息
