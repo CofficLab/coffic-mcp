@@ -42,11 +42,11 @@ export const getStaticPaths = async () => {
     </p>
 
     <!-- 文生图工具组件 -->
-    <!-- <Text2ImageTool
-        client:idle
-        client:only="vue"
-        models={models}
-        lang={currentLang}
-      /> -->
+    <Text2ImageTool
+      client:idle
+      client:only="vue"
+      models={models}
+      lang={currentLang}
+    />
   </Container>
 </DemoLayout>
