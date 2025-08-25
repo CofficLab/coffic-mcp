@@ -1,5 +1,5 @@
 ---
-export const prerender = false;
+export const prerender = true;
 
 import DemoLayout from '@/layouts/DemoLayout.astro';
 import Text2ImageTool from '@/components/text2image/Text2ImageTool.vue';
@@ -15,6 +15,17 @@ const title = currentLang === 'zh-cn' ? '文本转图像工具' : 'Text to Image
 
 // 获取文生图模型列表
 const models = text2imageModels;
+
+export const getStaticPaths = async () => {
+  return [
+    {
+      params: { lang: 'zh-cn' },
+    },
+    {
+      params: { lang: 'en' },
+    },
+  ];
+};
 ---
 
 <DemoLayout title={title} showSidebar={false} showTOC={false}>
