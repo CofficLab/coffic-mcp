@@ -1,20 +1,7 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue';
-
-  interface ModelInfo {
-    id: string;
-    name: string;
-    version: string;
-    type: string;
-    description: string;
-    recommended: boolean;
-  }
-
-  interface ModelGroup {
-    version: string;
-    title: string;
-    models: ModelInfo[];
-  }
+  import { actions } from 'astro:actions';
+  import type { ModelInfo, ModelGroup } from '@/libs/text2image';
 
   // 响应式数据
   const isLoading = ref(false);
@@ -57,24 +44,19 @@
     error.value = '';
 
     try {
-      // 模拟API调用 - 实际使用时替换为真实的API调用
-      const response = await fetch('/api/text2image_models', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          version: versionFilter.value || undefined,
-          recommended_only: recommendedOnly.value,
-        }),
+      // 使用 actions 调用
+      const { data, error } = await actions.getText2ImageModels({
+        version: versionFilter.value || undefined,
+        includeRecommended: recommendedOnly.value,
       });
 
-      if (!response.ok) {
-        throw new Error(`API请求失败: ${response.status}`);
+      if (error) {
+        throw new Error(error.message || '查询失败');
       }
 
-      const data = (await response.json()) as { models?: ModelGroup[] };
-      models.value = data.models || [];
+      if (data && data.data) {
+        models.value = data.data.models || [];
+      }
     } catch (err) {
       error.value = err instanceof Error ? err.message : '未知错误';
       console.error('获取模型列表失败:', err);

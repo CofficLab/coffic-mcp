@@ -1,6 +1,6 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
-import { getAllModels, getRecommendedModels, getModelsByCapability } from '../libs/imageEdit';
+import { getAllModels, getRecommendedModels, getModelsByCapability } from '../../libs/imageEdit';
 
 // 查询图像编辑模型的 Astro action
 export const getImageEditModels = defineAction({

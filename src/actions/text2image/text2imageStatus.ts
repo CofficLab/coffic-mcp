@@ -1,38 +1,41 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
-import { createImageEditStatusCore } from '@/libs/imageEdit';
+import { createText2ImageCore } from '../../libs/text2image';
 
-// 图像编辑任务状态查询 Action
-export const imageEditStatusAction = defineAction({
+// 文本转图像任务状态查询 Action
+export const text2imageStatusAction = defineAction({
     accept: 'json',
     input: z.object({
-        taskId: z.string().describe("图像编辑任务的ID"),
-        dashScopeApiKey: z.string().describe("DashScope API密钥"),
+        taskId: z.string().describe("文本转图像任务的ID"),
+        dashScopeApiKey: z.string().optional().describe("DashScope API密钥"),
     }),
     handler: async (input) => {
         try {
-            // 创建状态查询核心实例
-            const statusCore = createImageEditStatusCore();
+            // 从环境变量获取API密钥
+            const apiKey = process.env.DASHSCOPE_API_KEY || input.dashScopeApiKey;
 
-            // 验证请求参数
-            const validation = statusCore.validateRequest(input);
-            if (!validation.success) {
+            if (!apiKey) {
                 return {
                     success: false,
-                    message: `参数验证失败: ${validation.error}`,
+                    message: "错误: 需要提供DASHSCOPE_API_KEY环境变量或参数",
                     status: 'error'
                 };
             }
 
+            // 创建文本转图像核心实例
+            const text2imageCore = createText2ImageCore(apiKey);
+
             // 查询任务状态
-            const result = await statusCore.queryStatus(validation.data!);
+            const result = await text2imageCore.getTaskStatus({
+                task_id: input.taskId,
+                dashScopeApiKey: input.dashScopeApiKey
+            });
 
             return {
-                success: result.success,
-                message: result.message,
-                status: result.status,
-                images: result.images || [],
-                error: result.error
+                success: true,
+                message: '查询成功',
+                status: result.output.task_status,
+                data: result
             };
         } catch (error) {
             return {
@@ -46,13 +49,13 @@ export const imageEditStatusAction = defineAction({
 });
 
 // 客户端调用函数
-export async function callImageEditStatusAction(params: {
+export async function callText2ImageStatusAction(params: {
     taskId: string;
-    dashScopeApiKey: string;
+    dashScopeApiKey?: string;
 }) {
     try {
         // 使用 Astro Actions 的客户端调用方式
-        const response = await fetch('/api/actions/imageEditStatus', {
+        const response = await fetch('/api/actions/text2imageStatus', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

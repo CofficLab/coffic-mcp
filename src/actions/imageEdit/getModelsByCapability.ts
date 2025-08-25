@@ -1,6 +1,6 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
-import { getModelsByCapability } from '../libs/imageEdit';
+import { getModelsByCapability } from '../../libs/imageEdit';
 
 // 按功能查询支持的模型的 Astro action
 export const getModelsByCapabilityAction = defineAction({

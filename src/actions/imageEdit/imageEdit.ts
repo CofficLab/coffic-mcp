@@ -1,6 +1,6 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
-import { createImageEditCore, type ImageEditFunction } from '@/libs/imageEdit';
+import { createImageEditCore, type ImageEditFunction } from '../../libs/imageEdit';
 
 // 图像编辑Action
 export const imageEditAction = defineAction({

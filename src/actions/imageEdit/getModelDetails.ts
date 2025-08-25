@@ -1,6 +1,6 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
-import { getModelByName } from '../libs/imageEdit';
+import { getModelByName } from '../../libs/imageEdit';
 
 // 获取模型详细信息的 Astro action
 export const getModelDetails = defineAction({

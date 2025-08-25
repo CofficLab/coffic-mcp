@@ -1,6 +1,6 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
-import { getAllCapabilities } from '../libs/imageEdit';
+import { getAllCapabilities } from '../../libs/imageEdit';
 
 // 获取所有支持的编辑功能的 Astro action
 export const getImageEditCapabilities = defineAction({

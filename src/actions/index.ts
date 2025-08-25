@@ -1,17 +1,11 @@
-import { getImageEditModels } from './getImageEditModels';
-import { getImageEditCapabilities } from './getImageEditCapabilities';
-import { getModelsByCapabilityAction } from './getModelsByCapability';
-import { getModelDetails } from './getModelDetails';
-import { imageEditAction, getImageEditFunctionConfigAction, getAllImageEditFunctionsAction } from './imageEdit';
-import { imageEditStatusAction } from './imageEditStatus';
+// 从功能模块导入 Actions
+import * as imageEditActions from './imageEdit';
+import * as text2imageActions from './text2image';
 
 export const server = {
-  getImageEditModels,
-  getImageEditCapabilities,
-  getModelsByCapabilityAction,
-  getModelDetails,
-  imageEditAction,
-  getImageEditFunctionConfigAction,
-  getAllImageEditFunctionsAction,
-  imageEditStatusAction,
+  // 图像编辑相关 Actions
+  ...imageEditActions,
+
+  // 文本转图像相关 Actions
+  ...text2imageActions,
 };
