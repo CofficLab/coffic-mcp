@@ -53,7 +53,7 @@ export const getStaticPaths = async () => {
 
         {tags.length > 0 && (
             <Heading>Tags</Heading>
-          <Container gap="md" flex="row" size='full' justify='start'>
+          <Container gap="md" flex="row" width='full' justify='start'>
             {tags.map(tag => (
             <Badge variant="primary" size="sm">{tag}</Badge>
             ))}

@@ -24,5 +24,9 @@ export const configApp = {
             href: `${LinkUtil.getBaseUrl()}${lang}/manuals`,
             title: 'Docs',
         },
+        {
+            href: `${LinkUtil.getBaseUrl()}${lang}/tools/text2image`,
+            title: 'Text2Image',
+        }
     ],
 };
