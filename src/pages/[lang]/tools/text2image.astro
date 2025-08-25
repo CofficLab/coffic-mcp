@@ -4,7 +4,7 @@ export const prerender = false;
 import DemoLayout from '@/layouts/DemoLayout.astro';
 import Text2ImageTool from '@/components/text2image/Text2ImageTool.vue';
 import { text2imageModels } from '@/libs/text2image/models';
-import { Heading } from '@coffic/cosy-ui';
+import { Container, Heading } from '@coffic/cosy-ui';
 
 // 获取当前语言
 const { lang } = Astro.params;
@@ -18,28 +18,24 @@ const models = text2imageModels;
 ---
 
 <DemoLayout title={title} showSidebar={false} showTOC={false}>
-  <div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-8">
-        <Heading level={2} align="center">
-          {lang === 'zh-cn' ? '文本转图像工具' : 'Text to Image Tool'}
-        </Heading>
-        <p>
-          {
-            lang === 'zh-cn'
-              ? '使用 AI 将文字描述转换为精美的图像'
-              : 'Convert text descriptions into beautiful images using AI'
-          }
-        </p>
-      </div>
+  <Container>
+    <Heading level={2} align="center">
+      {lang === 'zh-cn' ? '文本转图像工具' : 'Text to Image Tool'}
+    </Heading>
+    <p>
+      {
+        lang === 'zh-cn'
+          ? '使用 AI 将文字描述转换为精美的图像'
+          : 'Convert text descriptions into beautiful images using AI'
+      }
+    </p>
 
-      <!-- 文生图工具组件 -->
-      <!-- <Text2ImageTool
+    <!-- 文生图工具组件 -->
+    <!-- <Text2ImageTool
         client:idle
         client:only="vue"
         models={models}
         lang={currentLang}
       /> -->
-    </div>
-  </div>
+  </Container>
 </DemoLayout>
