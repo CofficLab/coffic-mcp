@@ -1,6 +1,6 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
-import { createText2ImageCore } from '../../libs/text2image';
+import { createText2ImageCore } from '@/libs/text2image';
 
 // 文本转图像任务状态查询 Action
 export const text2imageStatusAction = defineAction({
@@ -24,11 +24,10 @@ export const text2imageStatusAction = defineAction({
             // 查询任务状态
             const result = await text2imageCore.getTaskStatus({
                 task_id: input.taskId,
-                dashScopeApiKey: input.dashScopeApiKey
+                dashScopeApiKey: apiKey
             });
 
             return {
-                message: '查询成功',
                 status: result.output.task_status,
                 data: result
             };

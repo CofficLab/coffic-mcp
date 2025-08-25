@@ -340,6 +340,58 @@ const deleteTask = (taskId: string) => {
     };
   }
 };
+
+// 刷新单个任务状态
+const refreshTask = async (taskId: string) => {
+  try {
+    const { data, error } = await actions.text2imageStatusAction({
+      taskId,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data?.status) {
+      // 更新任务历史中的状态
+      updateTask(taskId, { status: data.status });
+
+      // 如果任务成功，获取生成的图片
+      if (data.status === 'SUCCEEDED' && data.data?.output) {
+        const output = data.data.output;
+        if (output.results && output.results.length > 0) {
+          const images = output.results.map((result: any) => result.url);
+          updateTask(taskId, { images });
+        }
+      }
+
+      // 如果当前正在显示的任务就是被刷新的任务，更新显示状态
+      if (taskStatus.value.taskId === taskId) {
+        taskStatus.value.status = data.status;
+        if (data.status === 'SUCCEEDED' && data.data?.output) {
+          const output = data.data.output;
+          if (output.results && output.results.length > 0) {
+            taskStatus.value.images = output.results.map((result: any) => result.url);
+          }
+        }
+      }
+
+      // 显示成功消息
+      showSuccessMessage(
+        props.lang === 'zh-cn'
+          ? '任务状态已更新'
+          : 'Task status updated'
+      );
+    }
+  } catch (error) {
+    console.error('刷新任务状态失败:', error);
+    showErrorMessage(
+      props.lang === 'zh-cn'
+        ? `刷新任务状态失败:${error instanceof Error ? error.message : '未知错误'}`
+        : 'Failed to refresh task status'
+    );
+  }
+};
 </script>
 
 <template>
@@ -369,7 +421,8 @@ const deleteTask = (taskId: string) => {
 
       <!-- 任务历史区域 -->
       <div class="border-t pt-8">
-        <TaskHistory :models="models" :lang="lang" :on-view-task="viewTask" :on-delete-task="deleteTask" />
+        <TaskHistory :models="models" :lang="lang" :on-view-task="viewTask" :on-delete-task="deleteTask"
+          :on-refresh-task="refreshTask" />
       </div>
     </div>
   </Container>

@@ -2,13 +2,14 @@
 import { computed } from 'vue'
 import { useTaskHistory, type TaskHistoryItem } from '@/composables/useTaskHistory'
 import type { ModelInfo } from '@/libs/text2image/models'
-import { Button, DeleteIcon, ViewIcon, Heading, DownloadIcon } from '@coffic/cosy-ui/vue'
+import { Button, DeleteIcon, ViewIcon, Heading, DownloadIcon, RefreshIcon } from '@coffic/cosy-ui/vue'
 
 interface Props {
     models: ModelInfo[]
     lang: string
     onViewTask?: (task: TaskHistoryItem) => void
     onDeleteTask?: (taskId: string) => void
+    onRefreshTask?: (taskId: string) => void
 }
 
 const props = defineProps<Props>()
@@ -80,6 +81,11 @@ const downloadImage = (url: string, filename: string) => {
     link.click()
     document.body.removeChild(link)
 }
+
+// 处理刷新任务状态
+const handleRefreshTask = (taskId: string) => {
+    props.onRefreshTask?.(taskId)
+}
 </script>
 
 <template>
@@ -117,13 +123,17 @@ const downloadImage = (url: string, filename: string) => {
                         </p>
                     </div>
                     <div class="flex gap-1 ml-2">
-                        <button v-if="task.images.length > 0" @click="handleViewTask(task)"
-                            class="p-1 text-gray-400 hover:text-blue-600 transition-colors"
-                            :title="lang === 'zh-cn' ? '查看结果' : 'View Results'">
+                        <Button v-if="['PENDING', 'RUNNING'].includes(task.status)"
+                            @click="handleRefreshTask(task.taskId)"
+                            :title="lang === 'zh-cn' ? '刷新状态' : 'Refresh Status'" size="sm" variant="ghost">
+                            <RefreshIcon />
+                        </Button>
+                        <Button v-if="task.images.length > 0" @click="handleViewTask(task)"
+                            :title="lang === 'zh-cn' ? '查看结果' : 'View Results'" size="sm" variant="ghost">
                             <ViewIcon />
-                        </button>
+                        </Button>
                         <Button @click="handleDeleteTask(task.taskId)"
-                            :title="lang === 'zh-cn' ? '删除任务' : 'Delete Task'">
+                            :title="lang === 'zh-cn' ? '删除任务' : 'Delete Task'" size="sm" variant="ghost">
                             <DeleteIcon />
                         </Button>
                     </div>
