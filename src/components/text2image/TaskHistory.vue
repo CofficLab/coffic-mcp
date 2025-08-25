@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useTaskHistory, type TaskHistoryItem } from '@/composables/useTaskHistory'
 import type { ModelInfo } from '@/libs/text2image/models'
 import { Button, DeleteIcon, ViewIcon, Heading, DownloadIcon, RefreshIcon } from '@coffic/cosy-ui/vue'
@@ -16,8 +16,16 @@ const props = defineProps<Props>()
 
 const { getTaskHistory, removeTask } = useTaskHistory()
 
+// 客户端挂载状态
+const isMounted = ref(false)
+
 // 计算属性
 const taskHistory = computed(() => getTaskHistory.value)
+
+// 组件挂载后标记为已挂载
+onMounted(() => {
+    isMounted.value = true
+})
 
 // 格式化时间
 const formatTime = (timestamp: number) => {
@@ -99,11 +107,16 @@ const handleRefreshTask = (taskId: string) => {
             </div>
         </div>
 
-        <div v-if="taskHistory.length === 0" class="text-center py-8 text-gray-500">
-            {{ lang === 'zh-cn' ? '暂无任务历史' : 'No task history' }}
+        <!-- 服务端渲染占位符 -->
+        <div v-if="!isMounted" class="text-center py-8 text-gray-500">
+            {{ lang === 'zh-cn' ? '加载中...' : 'Loading...' }}
         </div>
 
+        <!-- 客户端渲染的任务列表，避免SSR hydration不匹配 -->
         <div v-else class="space-y-3">
+            <div v-if="taskHistory.length === 0" class="text-center py-8 text-gray-500">
+                {{ lang === 'zh-cn' ? '暂无任务历史' : 'No task history' }}
+            </div>
             <div v-for="task in taskHistory" :key="task.id"
                 class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                 <!-- 任务头部信息 -->

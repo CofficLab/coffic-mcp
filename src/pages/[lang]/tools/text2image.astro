@@ -34,7 +34,12 @@ const models = text2imageModels;
       </div>
 
       <!-- 文生图工具组件 -->
-      <Text2ImageTool client:idle models={models} lang={currentLang} />
+      <Text2ImageTool
+        client:idle
+        client:only="vue"
+        models={models}
+        lang={currentLang}
+      />
     </div>
   </div>
 </DemoLayout>

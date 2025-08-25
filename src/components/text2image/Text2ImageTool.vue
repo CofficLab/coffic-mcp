@@ -344,8 +344,12 @@ const deleteTask = (taskId: string) => {
 // 刷新单个任务状态
 const refreshTask = async (taskId: string) => {
   try {
+    // 从 localStorage 获取 API key
+    const allApiKeys = getAllApiKeys.value;
+
     const { data, error } = await actions.text2imageStatusAction({
       taskId,
+      dashScopeApiKey: allApiKeys.dashScopeApiKey,
     });
 
     if (error) {
