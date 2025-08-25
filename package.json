@@ -16,25 +16,25 @@
     "inspect": "npx @modelcontextprotocol/inspector@latest"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.4",
+    "@astrojs/cloudflare": "^12.6.5",
     "@astrojs/mdx": "^4.3.4",
     "@astrojs/vue": "^5.1.0",
     "@coffic/cosy-content": "^0.2.25",
-    "@coffic/cosy-ui": "^0.9.38",
+    "@coffic/cosy-ui": "^0.9.40",
     "@modelcontextprotocol/sdk": "1.17.1",
     "@tailwindcss/vite": "^4.1.12",
-    "@vueuse/core": "^13.6.0",
+    "@vueuse/core": "^13.7.0",
     "agents": "^0.0.109",
-    "astro": "^5.13.2",
+    "astro": "^5.13.3",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.1.12",
-    "vue": "^3.5.18",
+    "vue": "^3.5.19",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.0",
+    "@biomejs/biome": "^2.2.2",
     "daisyui": "^5.0.50",
     "typescript": "5.8.3",
-    "wrangler": "^4.30.0"
+    "wrangler": "^4.32.0"
   }
 }
