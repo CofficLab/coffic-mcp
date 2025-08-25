@@ -73,7 +73,7 @@
         throw new Error(`API请求失败: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as { models?: ModelGroup[] };
       models.value = data.models || [];
     } catch (err) {
       error.value = err instanceof Error ? err.message : '未知错误';
@@ -93,7 +93,7 @@
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto p-6">
+  <div class="max-w-4xl mx-auto p-6" ignore-heading>
     <div class="bg-white rounded-lg shadow-lg p-6">
       <!-- 标题 -->
       <div class="mb-6">
@@ -268,27 +268,6 @@
               : '模型列表为空'
           }}
         </p>
-      </div>
-
-      <!-- API调用示例 -->
-      <div class="mt-8 bg-gray-50 rounded-lg p-4">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">API调用示例</h3>
-        <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-          <pre class="text-green-400 text-sm"><code>// 查询所有支持的模型
-text2image_models({})
-
-// 查询特定版本的模型
-text2image_models({ version: "2.2" })
-
-// 查询推荐模型
-text2image_models({ recommended_only: true })
-
-// 组合查询
-text2image_models({ 
-  version: "2.2", 
-  recommended_only: true 
-})</code></pre>
-        </div>
       </div>
     </div>
   </div>
