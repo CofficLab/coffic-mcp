@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { actions } from 'astro:actions';
 import { Container, Alert } from '@coffic/cosy-ui/vue';
 import { useUIState } from '@/composables/useUIState';
 import { useApiKeyManager, type ApiKeyConfig } from '@/composables/useApiKeyManager';
+import { useLocalStorage } from '@/composables/useLocalStorage';
 import type { ModelInfo } from '@/libs/text2image/models';
 import TaskStatusCard from './TaskStatusCard.vue';
 import GeneratedImages from './GeneratedImages.vue';
@@ -55,6 +56,9 @@ const apiKeyConfigs: ApiKeyConfig[] = [
 ];
 
 const { apiKeys, getAllApiKeys, validateApiKeys, hasApiKeys } = useApiKeyManager(apiKeyConfigs);
+
+// 模型选择存储
+const { storedValue: savedModel, setStoredValue: setSavedModel } = useLocalStorage('text2image_selected_model', '');
 
 // 计算属性
 const isFormValid = computed(() => {
@@ -131,18 +135,28 @@ onMounted(() => {
   if (props.models) {
     models.value = props.models;
 
-    // 设置默认模型（推荐的第一个模型）
-    const recommendedModel = models.value.find((m) => m.recommended);
-    if (recommendedModel) {
-      formData.model = recommendedModel.id;
-    }
-
-    // 如果没有推荐模型，使用第一个可用模型
-    if (!formData.model && models.value.length > 0) {
-      formData.model = models.value[0].id;
+    // 优先使用保存的模型选择
+    if (savedModel.value && models.value.find(m => m.id === savedModel.value)) {
+      formData.model = savedModel.value;
+    } else {
+      // 如果没有保存的模型或保存的模型不存在，则使用推荐模型
+      const recommendedModel = models.value.find((m) => m.recommended);
+      if (recommendedModel) {
+        formData.model = recommendedModel.id;
+      } else if (models.value.length > 0) {
+        // 如果没有推荐模型，使用第一个可用模型
+        formData.model = models.value[0].id;
+      }
     }
   }
 });
+
+// 监听模型选择变化并自动保存
+watch(() => formData.model, (newModel) => {
+  if (newModel) {
+    setSavedModel(newModel);
+  }
+}, { immediate: false });
 
 // 提交文生图任务
 const submitTask = async () => {
