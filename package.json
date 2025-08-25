@@ -11,7 +11,7 @@
     "type-check": "tsc --noEmit",
     "dev": "astro dev --port 8700",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "pnpm build && wrangler pages dev ./dist",
     "astro": "astro",
     "inspect": "npx @modelcontextprotocol/inspector@latest"
   },
